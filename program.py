@@ -17,7 +17,7 @@ with open('offer.tex', 'r') as templateFile:
 
         newFile.append(line)
 
-name = "NAME"
+name = "NAAM"
 outPath = "out"
 if not os.path.exists(outPath):
     os.makedirs(outPath)

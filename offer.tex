@@ -1,18 +1,46 @@
 \documentclass{scrartcl}
 \usepackage[dutch]{babel}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\chead{\large Restaurant De Huiskamer \\
+\small Ansen $\quad$ tel $0522-471280$}
+\cfoot{\large Restaurant De Huiskamer \\
+\tiny Kerkdijk 2 - $7964KB$ Ansen - tel 0522-471280 - KvK 04005343
+ -  info@dehuiskamer.com \\
+IBAN NL07 SNSB 095.65.49.721 - BTW nr: 8094.43867B01
+\\
+www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer}
 \begin{document}
 \title{Restaurant De Huiskamer}
-\subtitle{tel 0522-471280}
 \date{Ansen, \today}
 \maketitle
+
+\thispagestyle{fancy}
+%Om de juiste vraag volgerdo aan te houden gebruiken we comments:
+% \$DATUMFEEST
+% \$BETREFT
+% \$TIJDFEEST
+% \$EIGENINVULLING
+
 \begin{flushright}
-	\$NAME \\
+	\$NAAM \\
 	\$ADRESS \\
-	\$POSTCODE \$PLACE
+	\$POSTCODE \$PLAATS
 \end{flushright}
-\section*{Betreft offerte}
+\section*{Betreft: offerte}
 \begin{tabular}{ l r }
   E-mail & \$EMAIL  \\
   Tel & \$TEL  \\
 \end{tabular}
+
+
+\subsubsection*{Geachte \$NAAM,}
+
+Naar aanleiding van ons gesprek ontvangt u hierbij een vrijblijvende offerte
+voor \$BETREFT op \$DATUMFEEST
+
+Uitgaande van \$GROEPGROTE gasten \$KINDEREN kan dit er als volgt uit zien:
+\newpage
+blah
 \end{document}
