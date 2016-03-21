@@ -108,11 +108,34 @@ class ActivityManager:
         result += "\n \\end{tabular} \n"
         return result
     def toPriceTableLatexStr(self, peopleCount, childrenCount):
-        result = "\\begin{tabular}{llll} \n"
+        result = "\\begin{tabular}{l l l r l r} \n"
+        totalPrice = 0
+        childrenCount = int(childrenCount)
+        peopleCount = int(peopleCount)
+
         for activity in self.currentActivities:
+            adults = peopleCount
+            if childrenCount != 0 and activity.childfactor != 1:
+                adults -= childrenCount
 
-            result += "%s & %s \\\\\n" % (timestr, activity)
-        result += "\n \\end{tabular} \n"
+            if activity.pricePerPerson != 0:
+                perPersonCosts = activity.pricePerPerson * adults
+                totalPrice += perPersonCosts
+                result += "%d & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
+                (adults, activity, activity.pricePerPerson, perPersonCosts)
 
+            if peopleCount != adults:
+                childprice = activity.pricePerPerson * activity.childfactor
+                childCost = childrenCount*childprice
+                result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
+                (childrenCount, childprice, childCost)
+                totalPrice += childCost
 
+            if activity.flatPrice != 0:
+                result += "1 & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
+                (activity, activity.flatPrice, activity.flatPrice)
+                totalPrice += activity.flatPrice
 
+        result += "& Totaal incl. btw & & & \\euro{} & %.2f \\\\\n" % totalPrice
+        result += "\\end{tabular} \n"
+        return result
