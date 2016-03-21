@@ -1,15 +1,17 @@
 % Overizcht feest:
 % Datum \$DATUMFEEST
 % Aantal gasten \$GROEPGROTE
+% Waarvan kinderen \$KINDEREN
 % Betreft: \$BETREFT
 % Begintijd: \$BEGINTIJD
-% Eindtijd: \$EINDTIJD
 % \$STARTPLANNING
 
 \documentclass{scrartcl}
 \usepackage[dutch]{babel}
 \usepackage{fancyhdr}
 \usepackage{wallpaper}
+\usepackage[official]{eurosym}
+
 \graphicspath{{img/}}
 \def\infofoot{
 	\fancyfoot[C]{
@@ -47,11 +49,10 @@ www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer
 	\$POSTCODE \$PLAATS
 \end{flushright}
 \section*{Betreft: offerte}
-\begin{tabular}{ l r }
+\begin{tabular}{l r}
   E-mail & \$EMAIL  \\
   Tel & \$TEL  \\
 \end{tabular}
-
 
 \subsubsection*{Geachte \$NAAM,}
 
@@ -60,10 +61,10 @@ voor \$BETREFT op \$DATUMFEEST
 
 Uitgaande van \$GROEPGROTE gasten \$KINDEREN kan dit er als volgt uit zien:
 
-\#DRAAIBOEK
+\$DRAAIBOEK
 
 \newpage
 
-\#PRIJSOVERZICHT
+\$PRIJSOVERZICHT
 
 \end{document}

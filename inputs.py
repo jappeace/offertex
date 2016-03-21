@@ -5,13 +5,13 @@ def userChoice(msg, options):
         optmap[n] = line
         print("%d: %s" % (n,str(line).rstrip()))
     try:
-        selected = int(input("your choice: \n"))
+        selected = int(input("Uw keuze: \n"))
     except ValueError:
-        print("invalid input try again")
+        print("Ongeldige invoer, ik acepteer alleen maar integers")
         return userChoice(msg, options)
     if selected in optmap:
         return optmap[selected]
     else:
-        print("%d is not available as choice" % selected)
+        print("%d is niet beschikbaar als keuze" % selected)
         return userChoice(msg, options)
 

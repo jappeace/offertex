@@ -45,7 +45,9 @@ with open('offer.tex', 'r') as templateFile:
                 if var == "STARTPLANNING":
                     import activity
                     man = activity.ActivityManager()
-                    result = man.planning()
+                    man.planning()
+                    symbolTable["DRAAIBOEK"] = man.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
+                    symbolTable["PRIJSOVERZICHT"] = man.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
                 else:
                     value = fillVar(var)
                     if value == "":
