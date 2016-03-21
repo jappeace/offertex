@@ -2,26 +2,29 @@
 \usepackage[dutch]{babel}
 \usepackage{fancyhdr}
 \usepackage{wallpaper}
-
-\fancypagestyle{footer}{%
-	\fancyhf{}
-	\cfoot{\large Restaurant De Huiskamer \\
+\graphicspath{{img/}}
+\def\infofoot{
+	\fancyfoot[C]{
+		\large Restaurant De Huiskamer \\
 	\tiny Kerkdijk 2 - $7964KB$ Ansen - tel 0522-471280 - KvK 04005343
 	 -  info@dehuiskamer.com \\
 	IBAN NL07 SNSB 095.65.49.721 - BTW nr: 8094.43867B01
 	\\
-	www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer}
+www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer
+}
+\fancyfoot[R]{
+    \parbox[b]{0cm}{\includegraphics[scale=0.12]{logo2kleur}}%
+}
+}
+\fancypagestyle{footer}{%
+	\fancyhf{}
+	\infofoot
 }
 \pagestyle{fancy}
 \renewcommand\headrulewidth{0pt}
 \chead{\large Restaurant De Huiskamer \\
 \small Ansen $\quad$ tel $0522-471280$}
-\cfoot{\large Restaurant De Huiskamer \\
-\tiny Kerkdijk 2 - $7964KB$ Ansen - tel 0522-471280 - KvK 04005343
- -  info@dehuiskamer.com \\
-IBAN NL07 SNSB 095.65.49.721 - BTW nr: 8094.43867B01
-\\
-www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer}
+\infofoot
 \begin{document}
 \ThisURCornerWallPaper{0.25}{img/logo.jpg}
 
