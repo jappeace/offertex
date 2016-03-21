@@ -11,17 +11,8 @@ variablesFolder = "variables" # for input sanitation
 
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
-        print("%s has a set of choices: " % var)
-        optmap = {}
-        for n,line in enumerate(options):
-            optmap[n] = line
-            print("%d: %s" % (n,line), end="")
-        try:
-            selected = int(input("your choice: \n"))
-        except ValueError:
-            print("invalid input try again")
-            return selectMenu(optionsFile, var)
-        return optmap[selected]
+        import inputs
+        return inputs.userChoice("%s has a set of choices: " % var, options.readlines())
 
 def regexMatchInput(testFile, var):
     with open(testFile, "r") as tfile:
@@ -35,6 +26,7 @@ def regexMatchInput(testFile, var):
 
 def simpleInput(var):
     return input("please specify %s \n" % var)
+
 def fillVar(var):
     possibleFile = "{}/{}".format(variablesFolder,var.lower())
     testFile = "%s.select" % possibleFile
@@ -49,9 +41,16 @@ with open('offer.tex', 'r') as templateFile:
         match = re.findall('((?<=\$)[A-Z]+)+', line)
         for var in match:
             if var not in symbolTable:
-                value = fillVar(var)
-                if value == "":
-                    value = "notset" #prevents certain kinds of latex compilation bugs
+                value = ""
+                if var == "STARTPLANNING":
+                    import activity
+                    man = activity.ActivityManager()
+                    result = man.planning()
+                else:
+                    value = fillVar(var)
+                    if value == "":
+                        #prevents certain kinds of latex compilation bugs
+                        value = "notset" 
                 symbolTable[var] = value
             value = symbolTable[var]
             line = line.replace('\\$'+var,value)
