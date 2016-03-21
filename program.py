@@ -18,14 +18,21 @@ with open('offer.tex', 'r') as templateFile:
         newFile.append(line)
 
 name = "NAAM"
+if symbolTable[name] == "":
+    print("Waarschuwing geen bestands naam!")
 outPath = "out"
 if not os.path.exists(outPath):
     os.makedirs(outPath)
+    import shutil
+    imgfolder = "img"
+    shutil.copytree(imgfolder,"{}/{}".format(outPath,imgfolder))
 
 outFileName = '{}.tex'.format(symbolTable[name])
 outFile = '{}/{}'.format(outPath, outFileName)
 with open(outFile, 'w') as outputFile:
+    print("starting with writing")
     for line in newFile:
+        print(line)
         outputFile.write(line)
 
 def executeAction(command):
@@ -46,3 +53,7 @@ processPdf = [
     outFileName
 ]
 executeAction(processPdf)
+
+# cleanup latex bullshit
+os.remove('{}/{}.log'.format(outPath, symbolTable[name]))
+os.remove('{}/{}.aux'.format(outPath, symbolTable[name]))
