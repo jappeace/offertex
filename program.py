@@ -6,12 +6,32 @@ from subprocess import check_output, CalledProcessError, TimeoutExpired
 
 symbolTable = {}
 newFile = []
+
+def selectMenu(optionsFile, var):
+    with open(optionsFile, 'r') as options:
+        print("%s has a set of choices: " % var)
+        optmap = {}
+        for n,line in enumerate(options):
+            optmap[n] = line
+            print("%d: %s" % (n,line), end="")
+        selected = int(input("your choice: \n"))
+        return optmap[selected]
+
+def fillVar(var):
+    optionsFolder = "options"
+    optionsFile = "{}/{}.select".format(optionsFolder,var.lower())
+    if os.path.isfile(optionsFile):
+        return selectMenu(optionsFile, var)
+    return input("please specify %s \n" % var)
 with open('offer.tex', 'r') as templateFile:
     for line in templateFile:
         match = re.findall('((?<=\$)[A-Z]+)+', line)
         for var in match:
             if var not in symbolTable:
-                symbolTable[var] = input("please specify %s \n" % var)
+                value = fillVar(var)
+                if value == "":
+                    value = "notset" #prevents certain kinds of latex compilation bugs
+                symbolTable[var] = value
             value = symbolTable[var]
             line = line.replace('\\$'+var,value)
 
@@ -32,7 +52,7 @@ outFile = '{}/{}'.format(outPath, outFileName)
 with open(outFile, 'w') as outputFile:
     print("starting with writing")
     for line in newFile:
-        print(line)
+        print(line, end="")
         outputFile.write(line)
 
 def executeAction(command):
