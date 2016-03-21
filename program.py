@@ -7,6 +7,8 @@ from subprocess import check_output, CalledProcessError, TimeoutExpired
 symbolTable = {}
 newFile = []
 
+variablesFolder = "variables" # for input sanitation
+
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
         print("%s has a set of choices: " % var)
@@ -14,15 +16,34 @@ def selectMenu(optionsFile, var):
         for n,line in enumerate(options):
             optmap[n] = line
             print("%d: %s" % (n,line), end="")
-        selected = int(input("your choice: \n"))
+        try:
+            selected = int(input("your choice: \n"))
+        except ValueError:
+            print("invalid input try again")
+            return selectMenu(optionsFile, var)
         return optmap[selected]
 
-def fillVar(var):
-    optionsFolder = "options"
-    optionsFile = "{}/{}.select".format(optionsFolder,var.lower())
-    if os.path.isfile(optionsFile):
-        return selectMenu(optionsFile, var)
+def regexMatchInput(testFile, var):
+    with open(testFile, "r") as tfile:
+        regex = tfile.readline()
+        failmsg = tfile.readline()
+        userInput = simpleInput(var)
+        if re.match(regex.rstrip(), userInput) is None:
+            print(failmsg % var)
+            return regexMatchInput(testFile, var)
+        return userInput
+
+def simpleInput(var):
     return input("please specify %s \n" % var)
+def fillVar(var):
+    possibleFile = "{}/{}".format(variablesFolder,var.lower())
+    testFile = "%s.select" % possibleFile
+    if os.path.isfile(testFile):
+        return selectMenu(testFile, var)
+    testFile = "%s.constraint" % possibleFile
+    if os.path.isfile(testFile):
+        return regexMatchInput(testFile, var)
+    return simpleInput(var)
 with open('offer.tex', 'r') as templateFile:
     for line in templateFile:
         match = re.findall('((?<=\$)[A-Z]+)+', line)
