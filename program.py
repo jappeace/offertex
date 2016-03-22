@@ -16,17 +16,40 @@ def selectMenu(optionsFile, var):
 
 def optionsMenu(optionsFile, var):
     def selectIfHasChildren(item):
-        hasChildren = symbolTable["KINDEREN"] == "0"
-        if x[0] == "k" and hasChildren:
-            return x[:0]+"+"+x[1:]
+        hasChildren = symbolTable["KINDEREN"] != "0"
+        if item[0] == "k" and hasChildren:
+            return item[:0]+"+"+item[1:]
         else:
-            return x
+            return item
+    done = "Klaar"
+    def selectOptions(lines):
+        def flip(line):
+            if line[0] == "-":
+                return "+" + line[1:]
+            return "-" + line[1:]
+        selected = inputs.userChoice("%s has a set of choices: " % var, lines)
+        if selected == done:
+            lines.remove(done)
+            filtered = filter(lambda line: line[0] == "+",lines)
+            return map(lambda line: parseLine(line[:2]), filtered)
+        indx = lines.index(selected)
+        lines[indx] = flip(selected)
+        return selectOptions(lines)
+
+    def toLatexItemlist(lines):
+        result = "\\begin{itemize} \n"
+        for line in lines:
+            result += "\t\\item %s \n" % line
+        result += "\\end{itemize} \n"
+        return result
 
     with open(optionsFile, 'r') as options:
         lines = options.readlines()
         import inputs
         lines = map(selectIfHasChildren, lines)
-        return inputs.userChoice("%s has a set of choices: " % var, lines)
+        lines = list(lines)
+        lines.append(done)
+        return toLatexItemlist(selectOptions(lines))
 
 
 def regexMatchInput(testFile, var):
@@ -55,28 +78,31 @@ def fillVar(var):
         return optionsMenu(testFile, var)
 
     return simpleInput(var)
+
+def parseLine(line):
+    match = re.findall('((?<=\$)[A-Z]+)+', line)
+    for var in match:
+        if var not in symbolTable:
+            value = ""
+            if var == "STARTPLANNING":
+                import activity
+                man = activity.ActivityManager()
+                man.planning()
+                symbolTable["DRAAIBOEK"] = man.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
+                symbolTable["PRIJSOVERZICHT"] = man.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
+            else:
+                value = fillVar(var)
+                if value == "":
+                    #prevents certain kinds of latex compilation bugs
+                    value = "notset" 
+            symbolTable[var] = value
+        value = symbolTable[var]
+        line = line.replace('\\$'+var,value)
+    return line
+
 with open('offer.tex', 'r') as templateFile:
     for line in templateFile:
-        match = re.findall('((?<=\$)[A-Z]+)+', line)
-        for var in match:
-            if var not in symbolTable:
-                value = ""
-                if var == "STARTPLANNING":
-                    import activity
-                    man = activity.ActivityManager()
-                    man.planning()
-                    symbolTable["DRAAIBOEK"] = man.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
-                    symbolTable["PRIJSOVERZICHT"] = man.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
-                else:
-                    value = fillVar(var)
-                    if value == "":
-                        #prevents certain kinds of latex compilation bugs
-                        value = "notset" 
-                symbolTable[var] = value
-            value = symbolTable[var]
-            line = line.replace('\\$'+var,value)
-
-        newFile.append(line)
+        newFile.append(parseLine(line))
 
 name = "NAAM"
 if symbolTable[name] == "":
