@@ -1,5 +1,5 @@
 import datetime
-class DetailS:
+class Detail:
     def __init__(
         self,
         title="",
@@ -20,13 +20,14 @@ class Activity:
             pricePerPerson,
             flatPrice = 0,
             childreduction= 0,
-            details = None
+            details = Detail()
         ):
         self.name = name
         self.duration = datetime.timedelta(minutes = durationInMinutes)
         self.pricePerPerson = pricePerPerson
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
+        details.title = name
         self.details = details
 
     def __str__(self):
