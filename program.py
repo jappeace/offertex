@@ -14,6 +14,21 @@ def selectMenu(optionsFile, var):
         import inputs
         return inputs.userChoice("%s has a set of choices: " % var, options.readlines())
 
+def optionsMenu(optionsFile, var):
+    def selectIfHasChildren(item):
+        hasChildren = symbolTable["KINDEREN"] == "0"
+        if x[0] == "k" and hasChildren:
+            return x[:0]+"+"+x[1:]
+        else:
+            return x
+
+    with open(optionsFile, 'r') as options:
+        lines = options.readlines()
+        import inputs
+        lines = map(selectIfHasChildren, lines)
+        return inputs.userChoice("%s has a set of choices: " % var, lines)
+
+
 def regexMatchInput(testFile, var):
     with open(testFile, "r") as tfile:
         regex = tfile.readline()
@@ -35,6 +50,10 @@ def fillVar(var):
     testFile = "%s.constraint" % possibleFile
     if os.path.isfile(testFile):
         return regexMatchInput(testFile, var)
+    testFile = "%s.options" % possibleFile
+    if os.path.isfile(testFile):
+        return optionsMenu(testFile, var)
+
     return simpleInput(var)
 with open('offer.tex', 'r') as templateFile:
     for line in templateFile:
