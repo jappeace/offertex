@@ -12,7 +12,7 @@ variablesFolder = "variables" # for input sanitation
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
         import inputs
-        return inputs.userChoice("%s has a set of choices: " % var, options.readlines())
+        return inputs.userChoice("selecteer een %s: " % var, options.readlines())
 
 def optionsMenu(optionsFile, var):
     def selectIfHasChildren(item):
@@ -27,11 +27,11 @@ def optionsMenu(optionsFile, var):
             if line[0] == "-":
                 return "+" + line[1:]
             return "-" + line[1:]
-        selected = inputs.userChoice("%s has a set of choices: " % var, lines)
+        selected = inputs.userChoice("selecteer optioneele %s: " % var, lines)
         if selected == done:
             lines.remove(done)
             filtered = filter(lambda line: line[0] == "+",lines)
-            return map(lambda line: parseLine(line[:2]), filtered)
+            return map(lambda line: parseLine(line[2:]), filtered)
         indx = lines.index(selected)
         lines[indx] = flip(selected)
         return selectOptions(lines)
