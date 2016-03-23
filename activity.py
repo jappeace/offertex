@@ -213,6 +213,7 @@ class ActivityManager:
                 (activity, activity.flatPrice, activity.flatPrice)
                 totalPrice += activity.flatPrice
 
+        result += "\\hline\n"
         result += "& Totaal incl. btw & & & \\euro{} & %.2f \\\\\n" % totalPrice
         result += "\\end{tabular} \n"
         return result

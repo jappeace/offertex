@@ -38,9 +38,14 @@ def optionsMenu(optionsFile, var):
 
     def toLatexItemlist(lines):
         result = "\\begin{itemize} \n"
+        didstuff = False
         for line in lines:
+            didstuff = True
             result += "\t\\item %s \n" % line
         result += "\\end{itemize} \n"
+
+        if not didstuff:
+            return ""
         return result
 
     with open(optionsFile, 'r') as options:
@@ -123,7 +128,7 @@ def parseLine(line):
                 value = fillVar(var)
                 if value == "":
                     #prevents certain kinds of latex compilation bugs
-                    value = "notset" 
+                    value = "-"
             symbolTable[var] = value
         value = symbolTable[var]
         line = line.replace('\\$'+var,value)
