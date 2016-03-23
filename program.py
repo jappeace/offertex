@@ -20,6 +20,12 @@ import re
 import os
 from subprocess import check_output, CalledProcessError, TimeoutExpired
 
+print("Offertex Copyright (C) 2016 Jappie Klooster")
+print("This program comes with ABSOLUTELY NO WARRANTY; for details see the")
+print("LICENSE file. This is free software, and you are welcome to ")
+print("redistribute it under certain conditions; see the LICENSE file for details")
+print("")
+print("")
 
 symbolTable = {}
 newFile = []
@@ -85,7 +91,7 @@ def regexMatchInput(testFile, var):
         return userInput
 
 def simpleInput(var):
-    return input("please specify %s \n" % var)
+    return input("specificeer %s \n" % var)
 
 def fillVar(var):
     possibleFile = "{}/{}".format(variablesFolder,var.lower())
