@@ -28,7 +28,11 @@ class Decoration(Activity):
         self.duration = base.duration + extension.duration
         self.pricePerPerson = base.pricePerPerson + extension.pricePerPerson
         self.flatPrice = base.flatPrice + extension.flatPrice
-        self.childfactor = base.childfactor # good luck making a composition out of this...
+        # good luck making a composition out of this...
+        # lets use a reducing default strategy instead.
+        self.childfactor = extension.childfactor
+        if base.childfactor != 1:
+            self.childfactor = base.childfactor
         self.filesysNames = base.filesysNames + extension.filesysNames
 
 import inputs
@@ -102,9 +106,9 @@ class ActivityManager:
                 Activity("Keuzemenu drie gangen", 150, 37.9),
                 Activity("Keuzemenu vier gangen", 180, 42.9),
         ]
-        koud = Activity("buffetkoud", 60, 0)
-        warm = Activity("buffetwarm", 60, 27.9)
-        dessert = Activity("Buffet dessert", 60, 0)
+        koud = Activity("buffetkoud", 60, 0, childreduction=.25)
+        warm = Activity("buffetwarm", 60, 27.9, childreduction=.25)
+        dessert = Activity("Buffet dessert", 60, 0, childreduction=.25)
         warmdessert = Decoration(warm, dessert, nameoverwrite="Warm en dessert buffet")
         kwdbuffet = Decoration(koud, warmdessert)
         self.possibleActivities[eten] += [
@@ -114,7 +118,7 @@ class ActivityManager:
             Decoration(Activity("Buffet De Huiskamer", 0, 10), kwdbuffet, nameoverwrite="Buffet De Huiskamer")
         ]
         # because price inconsisitency...
-        dessert = Activity("Buffet dessert", 45, 9.9)
+        dessert = Activity("Buffet dessert", 45, 9.9, childreduction=.25)
         soep = Activity("Buffet soep", 30, 5.9)
         ijs = Activity("Buffet ijs", 30, 5.9)
         self.possibleActivities[eten] += [
@@ -123,7 +127,7 @@ class ActivityManager:
             Activity("Barbeque De Huiskamer", 180, 37.9),
             Decoration(soep,
                 Decoration(
-                    Activity("Buffetwarm goedkoop", 60, 15.1), ijs
+                    Activity("Buffetwarm goedkoop", 60, 15.1, childreduction=.25), ijs
                 ),
                 nameoverwrite="Soep, warm en ijs buffet"
             ),
