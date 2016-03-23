@@ -110,8 +110,8 @@ class ActivityManager:
         self.possibleActivities[eten] += [
             Decoration(koud, warm, nameoverwrite="Koud en warm buffet"),
             warmdessert,
-            Decoration(Activity("Buffet Ansen", -60, 2), kwdbuffet),
-            Decoration(Activity("Buffet De Huiskamer", 0, 10), kwdbuffet)
+            Decoration(Activity("Buffet Ansen", -60, 2), kwdbuffet, nameoverwrite="Buffet Ansen"),
+            Decoration(Activity("Buffet De Huiskamer", 0, 10), kwdbuffet, nameoverwrite="Buffet De Huiskamer")
         ]
         # because price inconsisitency...
         dessert = Activity("Buffet dessert", 45, 9.9)
