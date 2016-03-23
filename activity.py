@@ -1,17 +1,4 @@
 import datetime
-class Detail:
-    def __init__(
-        self,
-        title="",
-        leadtext="",
-        ingredients=[],
-        footnotes=[]
-    ):
-        self.title = title
-        self.leadtext = leadtext
-        self.ingredients = ingredients
-        self.footnotes = footnotes
-
 class Activity:
     def __init__(
             self,
@@ -20,7 +7,6 @@ class Activity:
             pricePerPerson,
             flatPrice = 0,
             childreduction= 0,
-            details = Detail()
         ):
         self.name = name
         self.duration = datetime.timedelta(minutes = durationInMinutes)
@@ -28,7 +14,6 @@ class Activity:
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
         details.title = name
-        self.details = details
 
     def __str__(self):
         return self.name
