@@ -11,37 +11,45 @@
 \usepackage{fancyhdr}
 \usepackage{wallpaper}
 \usepackage[official]{eurosym}
+\usepackage{background}
+\usepackage{url}
 
 \graphicspath{{img/}}
-\def\infofoot{
-	\fancyfoot[C]{
-		\large Restaurant De Huiskamer \\
-	\tiny Kerkdijk 2 - $7964KB$ Ansen - tel 0522-471280 - KvK 04005343
-	 -  info@dehuiskamer.com \\
-	IBAN NL07 SNSB 095.65.49.721 - BTW nr: 8094.43867B01
-	\\
-www.dehuiskamer.com - www.de2dekamer.nl - m.facebook.com/RestaurantDeHuiskamer
+
+\backgroundsetup{
+  scale=1,
+  color=black,
+  opacity=1,
+  angle=0,
+  position=current page.south,
+  vshift=60pt,
+  contents={%
+  \small\sffamily%
+  \begin{minipage}{.8\textwidth}
+	\center
+	\large Restaurant De Huiskamer \\
+	\tiny Kerkdijk 2 - $7964KB$ Ansen - tel 0522-471280 - KvK 04005343 -  info@dehuiskamer.com \\
+	IBAN NL07 SNSB 095.65.49.721 - BTW nr: 8094.43867B01 \\
+	\url{www.dehuiskamer.com} - \url{www.de2dekamer.nl} - \url{m.facebook.com/RestaurantDeHuiskamer}
+  \end{minipage}\hspace{.02\textwidth}%
+  \begin{minipage}{.18\textwidth}
+	  \raggedleft
+  \includegraphics[width=\linewidth,height=70pt,keepaspectratio]{logo2kleur}
+  \end{minipage}%
+  }
 }
-\fancyfoot[R]{
-    \parbox[b]{0cm}{\includegraphics[scale=0.12]{logo2kleur}}%
-}
-}
-\fancypagestyle{footer}{%
-	\fancyhf{}
-	\infofoot
-}
-\pagestyle{fancy}
+
+\pagestyle{empty}
 \renewcommand\headrulewidth{0pt}
 \chead{\large Restaurant De Huiskamer \\
 \small Ansen $\quad$ tel $0522-471280$}
-\infofoot
 \begin{document}
 \ThisURCornerWallPaper{0.25}{img/logo.jpg}
 
 \title{Restaurant De Huiskamer}
 \date{Ansen, \today}
 \maketitle
-\thispagestyle{footer}
+\thispagestyle{empty}
 
 \begin{flushright}
 	\$NAAM \\
