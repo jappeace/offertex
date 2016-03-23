@@ -79,17 +79,41 @@ def fillVar(var):
 
     return simpleInput(var)
 
+def activitiesDetailsText(actList):
+    result = ""
+    print("starting figuring out details...")
+    folder = "details"
+    if not os.path.isdir(folder):
+        print("WARNING, %s folder not found" % folder)
+
+    for act in actList:
+        filename = "%s/%s.tex" % (folder, act.name.lower().replace(" ", "_"))
+        if not os.path.isfile(filename):
+            print("geen details voor %s" % filename)
+            continue
+
+        with open(filename, "r") as detailsfile:
+            print("openen van details voor %s" % filename)
+            result += "\\subsection*{%s}" % act.name
+            for line in detailsfile:
+                result += line
+    return result
+
+import activity
+manager = activity.ActivityManager()
+
 def parseLine(line):
     match = re.findall('((?<=\$)[A-Z]+)+', line)
     for var in match:
         if var not in symbolTable:
             value = ""
             if var == "STARTPLANNING":
-                import activity
-                man = activity.ActivityManager()
-                man.planning()
-                symbolTable["DRAAIBOEK"] = man.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
-                symbolTable["PRIJSOVERZICHT"] = man.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
+                manager.planning()
+                symbolTable["DRAAIBOEK"] = manager.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
+                symbolTable["PRIJSOVERZICHT"] = manager.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
+            elif var == "ACTIVITEITDETAILS":
+                value = activitiesDetailsText(manager.currentActivities)
+
             else:
                 value = fillVar(var)
                 if value == "":

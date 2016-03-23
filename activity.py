@@ -13,7 +13,6 @@ class Activity:
         self.pricePerPerson = pricePerPerson
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
-        details.title = name
 
     def __str__(self):
         return self.name
@@ -55,6 +54,7 @@ class ActivityManager:
             ],
             "Eten": [
                 Activity("Drentse Broodmaaltijd", 90, 13.9, childreduction=.25),
+                Activity("Koud, warm en dessert buffet De Huiskamer", 180, 37.9, childreduction=.25),
             ],
             "Ter afsluiting": [
                 Activity("Koffie", 30, 2.2),
@@ -66,8 +66,8 @@ class ActivityManager:
     def getCategories(self):
         keys = self.possibleActivities.keys()
         if self.currentActivities == []:
-            return self._onlyStart
-        return keys - self._onlyStart
+            return sorted(list(self._onlyStart))
+        return sorted(list(keys - self._onlyStart))
     def planning(self):
         print("")
         print("Start de planning")
@@ -78,7 +78,7 @@ class ActivityManager:
             if len(categories) == 1:
                 self.selectActivity(next(iter(categories)))
                 continue
-            categories.add(done)
+            categories.append(done)
             choice = inputs.userChoice("kies optie", categories)
             if choice == done:
                 break
