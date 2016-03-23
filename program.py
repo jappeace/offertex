@@ -169,6 +169,7 @@ processPdf = [
     outFileName
 ]
 executeAction(processPdf)
+executeAction(processPdf) # twice for background?
 
 # cleanup latex bullshit
 os.remove('{}/{}.log'.format(outPath, symbolTable[name]))
