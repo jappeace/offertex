@@ -13,15 +13,31 @@ class Activity:
         self.pricePerPerson = pricePerPerson
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
+        self.filesysNames = [name.lower().replace(" ", "_")]
 
     def __str__(self):
         return self.name
+
+class Decoration(Activity):
+    def __init__(self, base, extension, nameoverwrite = ""):
+        if nameoverwrite == "":
+            self.name = "%s + %s" % (base.name, extension)
+        else:
+            self.name = nameoverwrite
+
+        self.duration = base.duration + extension.duration
+        self.pricePerPerson = base.pricePerPerson + extension.pricePerPerson
+        self.flatPrice = base.flatPrice + extension.flatPrice
+        self.childfactor = base.childfactor # good luck making a composition out of this...
+        self.filesysNames = base.filesysNames + extension.filesysNames
 
 import inputs
 class ActivityManager:
     def __init__(self):
         self.currentActivities = []
         nothing = Activity("niks", 0, 0)
+
+        eten = "Eten"
         self.possibleActivities = {
             "Beginnen met": [
                 Activity("2x Koffie gebak", 60, 6.9),
@@ -52,8 +68,7 @@ class ActivityManager:
                 Activity("Tractor puzzel tocht", 120, 30),
                 Activity("Spel", 200, 6,150),
             ],
-            "Eten": [
-                Activity("Drentse Broodmaaltijd", 90, 13.9, childreduction=.25),
+            eten: [
                 Activity("Koud, warm en dessert buffet De Huiskamer", 180, 37.9, childreduction=.25),
             ],
             "Ter afsluiting": [
@@ -61,6 +76,63 @@ class ActivityManager:
                 Activity("Broodje ham/kaas", 0, 2.5),
             ]
         }
+        brood = Activity("Drentse Broodmaaltijd", 90, 13.9, childreduction=.25)
+        kroket = Activity("kroket", 0, 2)
+        luxeBroodjes = Activity("luxebroodjes", 0, 2)
+        brunch_base = Decoration(brood, Decoration(kroket,luxeBroodjes))
+        brunch = Activity("Brunch", 30, 7)
+        brunch_hk = Activity("Brunch De Huiskamer", 0, 5)
+        self.possibleActivities[eten] += [
+            brood,
+            Decoration(brood, kroket),
+            Decoration(brood, luxeBroodjes),
+            brunch_base
+        ]
+        tmp = Decoration(brunch, brunch_base)
+        tmp.name = brunch.name
+        self.possibleActivities[eten] += [tmp]
+
+        tmp = Decoration(brunch_hk, tmp)
+        tmp.name = brunch_hk.name
+        self.possibleActivities[eten] += [
+                tmp,
+                Activity("Hightea De Huiskamer", 120, 22.9, childreduction=.25),
+                Activity("Hightea Ansen", 90, 19.5, childreduction=.25),
+                Activity("Keuzemenu soep", 150, 32.9),
+                Activity("Keuzemenu drie gangen", 150, 37.9),
+                Activity("Keuzemenu vier gangen", 180, 42.9),
+        ]
+        koud = Activity("buffetkoud", 60, 0)
+        warm = Activity("buffetwarm", 60, 27.9)
+        dessert = Activity("Buffet dessert", 60, 0)
+        warmdessert = Decoration(warm, dessert, nameoverwrite="Warm en dessert buffet")
+        kwdbuffet = Decoration(koud, warmdessert)
+        self.possibleActivities[eten] += [
+            Decoration(koud, warm, nameoverwrite="Koud en warm buffet"),
+            warmdessert,
+            Decoration(Activity("Buffet Ansen", -60, 2), kwdbuffet),
+            Decoration(Activity("Buffet De Huiskamer", 0, 10), kwdbuffet)
+        ]
+        # because price inconsisitency...
+        dessert = Activity("Buffet dessert", 45, 9.9)
+        soep = Activity("Buffet soep", 30, 5.9)
+        ijs = Activity("Buffet ijs", 30, 5.9)
+        self.possibleActivities[eten] += [
+            dessert,
+            Activity("Barbeque Ansen", 120, 29.9),
+            Activity("Barbeque De Huiskamer", 180, 37.9),
+            Decoration(soep,
+                Decoration(
+                    Activity("Buffetwarm goedkoop", 60, 15.1), ijs
+                ),
+                nameoverwrite="Soep, warm en ijs buffet"
+            ),
+            ijs,
+            soep,
+            Activity("Buffet pannenkoeken", 60, 12),
+            Activity("Lunch", 60, 9.9),
+            Activity("Receptie arrangement", 240, 28.5),
+        ]
         self._onlyStart = set(["Beginnen met"])
 
     def getCategories(self):

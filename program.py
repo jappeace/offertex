@@ -87,16 +87,21 @@ def activitiesDetailsText(actList):
         print("WARNING, %s folder not found" % folder)
 
     for act in actList:
-        filename = "%s/%s.tex" % (folder, act.name.lower().replace(" ", "_"))
-        if not os.path.isfile(filename):
-            print("geen details voor %s" % filename)
-            continue
+        actcontent = ""
+        for actFSName in act.filesysNames:
+            filename = "%s/%s.tex" % (folder, actFSName)
+            if not os.path.isfile(filename):
+                print("geen details voor %s" % filename)
+                continue
 
-        with open(filename, "r") as detailsfile:
-            print("openen van details voor %s" % filename)
+            with open(filename, "r") as detailsfile:
+                print("openen van details voor %s" % filename)
+                for line in detailsfile:
+                    actcontent += line
+        if actcontent != "":
             result += "\\subsection*{%s}" % act.name
-            for line in detailsfile:
-                result += line
+            result += actcontent
+
     return result
 
 import activity
