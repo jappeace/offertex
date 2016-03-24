@@ -1,1 +1,2 @@
-numeriek.constraint
+[0-9]+
+%s moet numeriek zijn!
