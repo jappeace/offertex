@@ -33,6 +33,18 @@ of a file and also be able to load existing symboltables to speed up
 certain kind of configs.
 
 I'll probably keep developing this application for as long there is demand for it
-(A local buisness owner asked me to do this, and since software isn't his
-focus I decided to just opensource it, maybe sombody can get some use of it besides him)
+(A local business owner asked me to do this, and since software isn't his
+focus I decided to just opensource it, maybe somebody can get some use of it besides him)
+
+# License stuff
+Note that the offer.tex file itself isn't licensed under GPL, its just a
+reference input file. Having to share changes to it would be rather annoying
+because this is different for everyone else.
+
+The variable folder is configuration to, so also not licensed under GPL.
+
+This is also the reason why the hard dependencies should be moved out sooner
+rather than later, because making changes to them would require  sharing, but they're
+basically configuration. I'm not gonna do it now though because I have no
+more time left.
 
