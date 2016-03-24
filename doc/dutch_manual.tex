@@ -1,0 +1,87 @@
+\documentclass{scrartcl}
+\usepackage[dutch]{babel}
+\usepackage{fancyhdr}
+\usepackage{wallpaper}
+\usepackage{listings}
+
+\begin{document}
+\title{Handleiding offertex}
+\date{\today}
+\author{Jappie Klooster}
+\maketitle
+\section{Opzet}
+Het programma heeft \emph{pdflatex} nodig om pdf bestanden te maken en
+\emph{python 3.4} nodig om succesvol te kunnen worden uitgevoerd.
+
+\LaTeX word gebruikt om van een text bestand een mooi getypeset bestand
+te maken.
+
+\section{Gebruik}
+in de root directory voer het volgende commando uit in uw favorite terminal
+emulator:
+\begin{lstlisting}[language=bash]
+	./program.py
+\end{lstlisting}
+
+Het programma stelt u dan een lijst met vragen. Het doet dit op basis
+van de variablen (gemakeert met \$) gevonden in het offer.tex bestand.
+Als alle vragen beantwoord zijn dan worden er een \$NAAM.tex en \$NAAM.pdf
+gegenereerd in de out folder. Dus als alles goed is gegaan dan kun je
+het pdf besand in 1 keer opsturen. Als er nog fouten in staan an
+kun je eventueel handmatig het \$NAAM.tex bestand aanpassen en een
+nieuw pdf bestand generereren met \emph{pdflatex}.
+
+\subsection{Configuratie}
+Het programma of de variable naam bestaat in de variables
+folder, als dit het geval is dan kunnen er andere soorten menus worden
+gegenereerd op basis van de overeenkomende naam (bijvoorbeeld in het
+geval van .select en .options). De .options regels kunnen zelf ook variabelen
+bevatten.
+
+In de details folder worden de ``ingredienten'' van de verschillende buffetten 
+omschreven. Dit is wederom in \LaTeX formaat.
+
+\subsubsection{Aanpassen template}
+Als u niet tevreden bent met het uiterlijk kunt u er voor
+kiezen om het offer.tex bestand aan te passen. zorg ervoor dat
+deze aanpassingen succesvol kunnen worden behandeld met \emph{pdflatex},
+anders zal er geen pdf bestand gegenereerd worden.
+
+om te testen of het werkt voer het volgende commando uit:
+
+\begin{lstlisting}[language=bash]
+	pdflatex offer.tex
+\end{lstlisting}
+
+als er geen errors of warnings worden weergeven (en er een pdf bestand
+verschijnt, of deze word vernieuwd), dan zijn de wijzigingen goed.
+
+\section{FAQ}
+\subsection{Waarom word er gebruik gemaakt van \LaTeX}
+Omdat latex geheel in ascii geschreven is, is het extreem makkelijk
+om een latex bestand te gebruiken als template en daar variablen in
+te vullen met behulp van een script taal (python in dit geval)
+
+Een office pakket gebruikt doorgaans een binair formaat. Dit betekent
+dat je bestanden alleen kan aanpassen via het office pakket. Wat
+extreem onwenselijk is voor complexere opdrachten zoals deze.
+
+Daarnaast zijn de gebruikte technologieen gratis en vrij aanpasbaar.
+Dit betekent dat je niet afhankelijk bent van iemand als je dit
+gebruikt (zoals wel het geval is bij ms office, namelijk microsoft).
+
+\subsection{Terminal emulator, wat?}
+Een programma waarin u commandos can geven aan de computer. Dit is
+doorgaans de meest efficiente technologie te werken met text en bestanden.
+
+op windows werkt een programma als cygwin het best. osx en linux hebben
+al 1 voorgeinstaleerd.
+
+\subsection{Geen grafische user interface?}
+Nee, het maken van grafische user interfaces is extreem tijdrovend.
+Daarnaast werken ze ineficienter. Je kan meer doen met text invoer.
+\subsection{Waarom is het opensource?}
+Omdat dit programma te moeilijk is om te verkopen, maar moeilijk
+genoeg in gebruik voor het verkoop van ondersteuning. De perfecte
+combinatie voor opensource.
+\end {document}
