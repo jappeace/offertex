@@ -42,3 +42,5 @@ executeAction(processPdf) # twice for background?
 # cleanup latex bullshit
 os.remove('{}/{}.log'.format(outPath, symbolTable[name]))
 os.remove('{}/{}.aux'.format(outPath, symbolTable[name]))
+
+input("done, output can be found in %s, press enter to exit program" % outPath)
