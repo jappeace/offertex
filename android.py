@@ -33,10 +33,6 @@ abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
-import locale
-# trying to solve a weird issue where the locale query fails
-locale.setlocale(locale.LC_ALL, 'C')
-
 symbolTable = {}
 newFile = []
 
