@@ -27,12 +27,15 @@ class Activity:
             configureable = False
         ):
         self.name = name
-        self.duration = datetime.timedelta(minutes = durationInMinutes)
+        self.setDuration(durationInMinutes)
         self.pricePerPerson = pricePerPerson
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
         self.filesysNames = [name.lower().replace(" ", "_")]
         self.configureable = configureable
+
+    def setDuration(self, durationInMinutes):
+        self.duration = datetime.timedelta(minutes = durationInMinutes)
 
     def __str__(self):
         return self.name
@@ -199,10 +202,13 @@ class ActivityManager:
             print("%d: %s"%(i,activity))
         print("")
 
+
     def toTimeTableLatexStr(self, startingTime):
         currentTime = datetime.datetime.strptime(startingTime, "%H:%M")
         result = "\\begin{tabular}{ll} \n"
         for activity in self.currentActivities:
+            if activity.configureable:
+                activity.setDuration(inputs.intput("hoelang %s in minuten?\n" % activity.name))
             timestr = currentTime.strftime("%H.%M uur")
             result += "%s & %s \\\\\n" % (timestr, activity)
             currentTime += activity.duration
@@ -218,14 +224,7 @@ class ActivityManager:
         for activity in self.currentActivities:
             adults = peopleCount
             if activity.configureable:
-                trying = True
-                while trying:
-                    try:
-                        adults = adults * int(input("hoeveel %s?\n" % activity.name))
-                        activity.durationInMinutes = int(input("hoelang %s in minuten?\n" % activity.name))
-                        trying = False
-                    except ValueError:
-                        print("invalid input")
+                adults = adults * inputs.intput("hoeveel %s per persoon?\n" % activity.name)
 
             if childrenCount != 0 and activity.childfactor != 1:
                 adults -= childrenCount
@@ -239,7 +238,7 @@ class ActivityManager:
             if peopleCount != adults and not activity.configureable:
                 childprice = activity.pricePerPerson * activity.childfactor
                 childCost = childrenCount*childprice
-                result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
+                result += "%d & Kinderen & \\euro{} & %.0f & \\euro{} & %.0f \\\\\n" % \
                 (childrenCount, childprice, childCost)
                 totalPrice += childCost
 

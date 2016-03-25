@@ -32,3 +32,10 @@ def userChoice(msg, options):
         print("%d is niet beschikbaar als keuze" % selected)
         return userChoice(msg, options)
 
+# try again on value error
+def intput(msg):
+    while True:
+        try:
+            return int(input(msg))
+        except ValueError:
+            print("Acepteer alleen integers")
