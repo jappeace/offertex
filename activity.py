@@ -24,6 +24,7 @@ class Activity:
             pricePerPerson,
             flatPrice = 0,
             childreduction= 0,
+            countable = False
         ):
         self.name = name
         self.duration = datetime.timedelta(minutes = durationInMinutes)
@@ -31,6 +32,7 @@ class Activity:
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
         self.filesysNames = [name.lower().replace(" ", "_")]
+        self.countable = countable
 
     def __str__(self):
         return self.name
@@ -51,6 +53,7 @@ class Decoration(Activity):
         if base.childfactor != 1:
             self.childfactor = base.childfactor
         self.filesysNames = base.filesysNames + extension.filesysNames
+        self.countable = base.countable or extension.countable
 
 import inputs
 class ActivityManager:
@@ -74,7 +77,7 @@ class ActivityManager:
                 Activity("Hapjes koud mix", 0, 1.3),
                 Activity("Hapjes warm", 0, 1.3),
                 Activity("Hapjes bittergarnituur", 0, 0.8),
-                Activity("Borellen", 60, 0.8),
+                Activity("Consumpties", 0, 2.3, countable = True),
             ],
             "Aktiviteit": [
                 Activity("Klootschieten", 75, 2),
@@ -164,6 +167,7 @@ class ActivityManager:
     def planning(self):
         print("")
         print("Start de planning")
+        delete = "Verwijder laatste toevoeging"
         done = "Klaar met planning en ga verder"
         while True:
             self.printCurrentPlanning()
@@ -172,9 +176,13 @@ class ActivityManager:
                 self.selectActivity(next(iter(categories)))
                 continue
             categories.append(done)
+            categories.append(delete)
             choice = inputs.userChoice("kies optie", categories)
             if choice == done:
                 break
+            if choice == delete:
+                self.currentActivities.pop()
+                continue
             self.selectActivity(choice)
 
     def selectActivity(self, category):
@@ -209,6 +217,15 @@ class ActivityManager:
 
         for activity in self.currentActivities:
             adults = peopleCount
+            if activity.countable:
+                trying = True
+                while trying:
+                    try:
+                        adults = adults * int(input("hoeveel %s?\n" % activity.name))
+                        trying = False
+                    except ValueError:
+                        print("invalid input")
+
             if childrenCount != 0 and activity.childfactor != 1:
                 adults -= childrenCount
 
