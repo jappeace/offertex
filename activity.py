@@ -236,9 +236,15 @@ class ActivityManager:
                 (adults, activity, activity.pricePerPerson, perPersonCosts)
 
             if peopleCount != adults and not activity.configureable:
-                childprice = activity.pricePerPerson * activity.childfactor
-                childCost = childrenCount*childprice
-                result += "%d & Kinderen & \\euro{} & %.0f & \\euro{} & %.0f \\\\\n" % \
+                # doulbe rounding is a big no no, but the offer should look
+                # nice, and having individual cents on it just makes it look
+                # greedy.
+                # The only way to do this right is by doing double roundings
+                # because we don't want people recalulating and have a difference
+                # of several euros.
+                childprice = round(activity.pricePerPerson * activity.childfactor, 1)
+                childCost = round(childrenCount*childprice,1)
+                result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
                 (childrenCount, childprice, childCost)
                 totalPrice += childCost
 
