@@ -41,7 +41,8 @@ Note that the offer.tex file itself isn't licensed under GPL, its just a
 reference input file. Having to share changes to it would be rather annoying
 because this is different for everyone else.
 
-The variable folder is configuration to, so also not licensed under GPL.
+The variable folder is configuration to, so also not licensed under GPL. (although
+any \*.py file that may be there in the future will be under GPL)
 
 This is also the reason why the hard dependencies should be moved out sooner
 rather than later, because making changes to them would require  sharing, but they're
