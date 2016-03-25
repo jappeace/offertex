@@ -24,7 +24,7 @@ class Activity:
             pricePerPerson,
             flatPrice = 0,
             childreduction= 0,
-            countable = False
+            configureable = False
         ):
         self.name = name
         self.duration = datetime.timedelta(minutes = durationInMinutes)
@@ -32,7 +32,7 @@ class Activity:
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
         self.filesysNames = [name.lower().replace(" ", "_")]
-        self.countable = countable
+        self.configureable = configureable
 
     def __str__(self):
         return self.name
@@ -53,7 +53,7 @@ class Decoration(Activity):
         if base.childfactor != 1:
             self.childfactor = base.childfactor
         self.filesysNames = base.filesysNames + extension.filesysNames
-        self.countable = base.countable or extension.countable
+        self.configureable = base.configureable or extension.configureable
 
 import inputs
 class ActivityManager:
@@ -77,7 +77,7 @@ class ActivityManager:
                 Activity("Hapjes koud mix", 0, 1.3),
                 Activity("Hapjes warm", 0, 1.3),
                 Activity("Hapjes bittergarnituur", 0, 0.8),
-                Activity("Consumpties", 0, 2.3, countable = True),
+                Activity("Consumpties/Borrelen", 0, 2.3, configureable = True),
             ],
             "Aktiviteit": [
                 Activity("Klootschieten", 75, 2),
@@ -217,11 +217,12 @@ class ActivityManager:
 
         for activity in self.currentActivities:
             adults = peopleCount
-            if activity.countable:
+            if activity.configureable:
                 trying = True
                 while trying:
                     try:
                         adults = adults * int(input("hoeveel %s?\n" % activity.name))
+                        activity.durationInMinutes = int(input("hoelang %s in minuten?\n" % activity.name))
                         trying = False
                     except ValueError:
                         print("invalid input")
@@ -235,7 +236,7 @@ class ActivityManager:
                 result += "%d & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
                 (adults, activity, activity.pricePerPerson, perPersonCosts)
 
-            if peopleCount != adults:
+            if peopleCount != adults and not activity.configureable:
                 childprice = activity.pricePerPerson * activity.childfactor
                 childCost = childrenCount*childprice
                 result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
