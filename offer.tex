@@ -16,6 +16,20 @@
 \usepackage{enumitem}
 \setlist{nosep, after=\vspace{\baselineskip}}
 
+% weird character support (ie sate).
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % load a font with all the characters
+
+
+\setcounter{secnumdepth}{0}% % Turns off numbering for sections
+\makeatletter
+\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+\patchcmd{\@sect}% <cmd>
+  {\else \protect}% <search>
+  {\protect\numberline{}\else\protect}% <replace>
+  {}{}% <success><failure>
+\makeatother 
 
 \graphicspath{{img/}}
 

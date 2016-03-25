@@ -257,3 +257,29 @@ class ActivityManager:
         result += "& Totaal incl. btw & & & \\euro{} & %.2f \\\\\n" % totalPrice
         result += "\\end{tabular} \n"
         return result
+
+    def activitiesDetailsText(self):
+        result = ""
+        print("starting figuring out details...")
+        folder = "details"
+        import os
+        if not os.path.isdir(folder):
+            print("WARNING, %s folder not found" % folder)
+
+        for act in self.currentActivities:
+            actcontent = ""
+            for actFSName in act.filesysNames:
+                filename = "%s/%s.tex" % (folder, actFSName)
+                if not os.path.isfile(filename):
+                    print("geen details voor %s" % filename)
+                    continue
+
+                with open(filename, "r") as detailsfile:
+                    print("openen van details voor %s" % filename)
+                    for line in detailsfile:
+                        actcontent += line
+            if actcontent != "":
+                result += "\\subsection*{%s}" % act.name
+                result += actcontent
+
+        return result
