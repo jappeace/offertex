@@ -26,6 +26,13 @@ print("redistribute it under certain conditions; see the LICENSE file for detail
 print("")
 print("")
 
+# move to the current directory so we can find the offer.tex file
+# (required for qpython as it starts in root, also just makes
+# the script more robust).
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
 symbolTable = {}
 newFile = []
 
