@@ -17,6 +17,39 @@ This program is useful for situation in which you want to be able to create lots
 of almost similar documents. Currently the implementation part is in dutch
 and has some hard dependencies but this should be relatively easily modify able.
 
+## Instalation
+
+### Linux
+install texlive with all required packages. Make sure you use python 3.
+on gentoo:
+
+	# emerge -a app-text/texlive
+	# eselect python list
+	# eselect python set (any python 3)
+
+execute trough:
+
+	$ ./program.py
+
+### Windows
+install python 3 trough the classical google method. Install miktex.
+Now you can just click `program.py`
+
+### OSX
+Install python and mactex.
+then execute trough:
+
+	$ ./program.py
+
+### Android
+Android is currently unstable due to a locale bug in qpython. although
+the program can go trough the initial phases.
+Android also uses the program in reduced form where the pdf file isn't
+generated because the sytem module of python doesn't work.
+
+install qpython3, and install verblatex to create the pdf.
+Once the locale bug is fixed in android everything should work.
+
 ## Future work
 
 * Move out the hard dependencies to variable folders (KINDEREN in the options menu)
