@@ -6,7 +6,7 @@
 % Begintijd: \$BEGINTIJD
 % \$STARTPLANNING
 
-\documentclass{scrartcl}
+\documentclass{letter}
 \usepackage[dutch]{babel}
 \usepackage{fancyhdr}
 \usepackage{wallpaper}
@@ -63,23 +63,17 @@
 \begin{document}
 \ThisURCornerWallPaper{0.25}{img/logo.jpg}
 
-\title{Restaurant De Huiskamer}
-\date{Ansen, \today}
-\maketitle
+\signature{Pedro Klooster}
+\address{\$NAAM \\ \$ADRESS \\ \$POSTCODE \$PLAATS}
+\begin{letter}{
+\textbf{Betreft: offerte}\\%
+  E-mail \$EMAIL  \\
+  Tel \$TEL
+	}
 \thispagestyle{empty}
 
-\begin{flushright}
-	\$NAAM \\
-	\$ADRESS \\
-	\$POSTCODE \$PLAATS
-\end{flushright}
-\section*{Betreft: offerte}
-\begin{tabular}{l r}
-  E-mail & \$EMAIL  \\
-  Tel & \$TEL  \\
-\end{tabular}
 
-\subsubsection*{Geachte \$AANHEF \$NAAM,}
+\opening{Geachte \$AANHEF \$NAAM,}
 
 Naar aanleiding van ons gesprek ontvangt u hierbij een vrijblijvend offerte voorstel
 voor een \$BETREFT op \$DATUMFEEST \\
@@ -89,12 +83,13 @@ Uitgaande van \$GROEPGROTE gasten incusief \$KINDEREN kinderen kan dit er als vo
 
 \newpage
 
-\subsection*{Kosten specificatie}
+
+\textbf{Kosten specificatie}
 Uigaande van \$GROEPGROTE gasten inclusief \$KINDEREN kinderen.
 
 \$PRIJSOVERZICHT
 
-\subsection*{Bijzonderheden}
+\textbf{Bijzonderheden}
 
 \$BIJZONDERHEDEN
 
@@ -102,18 +97,19 @@ Uigaande van \$GROEPGROTE gasten inclusief \$KINDEREN kinderen.
 
 We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw reactie, \\
 
-Met gastvije groet, \\\\
+\closing{Met gastvije groet,}
+\encl{Activiteit details \\ Dieet specificaties}
 
-Pedro Klooster
+
+\end{letter}
 
 \newpage
 
-\section*{Activiteit details}
+\textbf{Activiteit details}
 
 \$ACTIVITEITDETAILS
 
-\section*{Dieet}
+\textbf{Dieet specificaties}
 
 \$DIEET
-
 \end{document}

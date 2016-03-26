@@ -38,9 +38,10 @@ newFile = []
 
 variablesFolder = "variables" # for input sanitation
 
+import inputs
+
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
-        import inputs
         return inputs.userChoice("selecteer een %s: " % var, options.readlines())
 
 def optionsMenu(optionsFile, var):
@@ -138,7 +139,12 @@ def parseLine(line):
         line = line.replace('\\$'+var,value)
     return line
 
-with open('offer.tex', 'r') as templateFile:
+templatesFolder = "templates"
+if not os.path.isdir(templatesFolder):
+    raise OSError("%s folder not found"% templatesFolder)
+onlyfolders = [d for d in os.listdir(templatesFolder) if os.path.isdir(os.path.join(templatesFolder, d))]
+selected = inputs.userChoice("Selecteer een template", onlyfolders)
+with open(os.path.join(templatesFolder, selected, 'offer.tex'), 'r') as templateFile:
     for line in templateFile:
         newFile.append(parseLine(line))
 
