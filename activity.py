@@ -279,7 +279,7 @@ class ActivityManager:
                     for line in detailsfile:
                         actcontent += line
             if actcontent != "":
-                result += "\\subsection*{%s}" % act.name
+                result += "\\subsection{%s}" % act.name
                 result += actcontent
 
         return result
