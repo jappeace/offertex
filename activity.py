@@ -94,6 +94,7 @@ class ActivityManager:
                 Activity("Solex", 120, 30),
                 Activity("Tractor puzzel tocht", 120, 30),
                 Activity("Spel", 200, 6,150),
+                Activity("Trouw ceremonie", 60, 0,175),
             ],
             eten: [
                 Activity("Koud, warm en dessert buffet De Huiskamer", 180, 37.9, childreduction=.25),
