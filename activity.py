@@ -146,8 +146,8 @@ class ActivityManager:
         ijs = Activity("Buffet ijs", 30, 5.9)
         self.possibleActivities[eten] += [
             dessert,
-            Activity("Barbeque Ansen", 120, 29.9),
-            Activity("Barbeque De Huiskamer", 180, 37.9),
+            Activity("Barbeque Ansen", 120, 24.9, childreduction=.25),
+            Activity("Barbeque De Huiskamer", 180, 27.9, childreduction=.25),
             Decoration(soep,
                 Decoration(
                     Activity("Buffetwarm goedkoop", 60, 15.1, childreduction=.25), ijs
