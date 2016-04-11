@@ -42,7 +42,9 @@ import inputs
 
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
-        return inputs.userChoice("selecteer een %s: " % var, options.readlines())
+        return parseLine(
+            inputs.userChoice("selecteer een %s: " % var, options.readlines())
+        )
 
 def optionsMenu(optionsFile, var):
     def selectIfHasChildren(item):
