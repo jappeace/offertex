@@ -59,8 +59,12 @@ def optionsMenu(optionsFile, var):
             return "-" + line[1:]
         selected = inputs.userChoice("selecteer optioneele %s: " % var, lines)
         if selected == done:
+            # remove the done option
             lines.remove(done)
+            # filter selected items
             filtered = filter(lambda line: line[0] == "+",lines)
+            # remove the selection symbol
+            # parse for user choice ($ anotated strings)
             return map(lambda line: parseLine(line[2:]), filtered)
         indx = lines.index(selected)
         lines[indx] = flip(selected)
