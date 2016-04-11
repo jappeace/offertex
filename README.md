@@ -80,5 +80,5 @@ any \*.py file that may be there in the future will be under GPL)
 This is also the reason why the hard dependencies should be moved out sooner
 rather than later, because making changes to them would require  sharing, but they're
 basically configuration. I'm not gonna do it now though because I have no
-more time left.
+more time left..
 
