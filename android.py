@@ -164,8 +164,25 @@ if not os.path.exists(outPath):
     imgfolder = "img"
     shutil.copytree(imgfolder,"{}/{}".format(outPath,imgfolder))
 
-outFileName = '{}.tex'.format(symbolTable[name])
-outFile = '{}/{}'.format(outPath, outFileName)
+outFileName = symbolTable[name]
+outFileName = outFileName.replace(".", "")
+outFileName = outFileName.replace("/", "")
+outFileName = outFileName.replace(" ", "")
+attempts = ""
+
+def createOutfile(name,attempts):
+    if not attempts == "":
+        attempts = "(%s)" % attempts
+    return '%s%s.tex' % (outFileName,attempts)
+def createOutFileName(path,name,attempts):
+    return '%s/%s' % (path,createOutfile(outFileName,attempts))
+
+while os.path.isfile(createOutFileName(outPath, outFileName,attempts)):
+    attempts += "I"
+
+outFile = createOutFileName(outPath, outFileName,attempts)
+outFileName = createOutfile(outFileName, attempts) # adminastration
+
 with open(outFile, 'w') as outputFile:
     print("starting with writing")
     for line in newFile:

@@ -16,7 +16,7 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from android import outFileName, outPath, symbolTable, name
+from android import outFileName, outPath, symbolTable, name, outFile
 from subprocess import check_output, CalledProcessError, TimeoutExpired
 
 def executeAction(command):
@@ -40,7 +40,7 @@ executeAction(processPdf)
 executeAction(processPdf) # twice for background?
 
 # cleanup latex bullshit
-os.remove('{}/{}.log'.format(outPath, symbolTable[name]))
-os.remove('{}/{}.aux'.format(outPath, symbolTable[name]))
+os.remove("%s.log"%outFile[:-4])
+os.remove("%s.aux"%outFile[:-4])
 
 input("done, output can be found in %s, press enter to exit program" % outPath)
