@@ -60,9 +60,9 @@ class Decoration(Activity):
 
 import inputs
 class ActivityManager:
+    nothing = Activity("niks", 0, 0)
     def __init__(self):
         self.currentActivities = []
-        nothing = Activity("niks", 0, 0)
 
         eten = "Eten"
         self.possibleActivities = {
@@ -72,7 +72,7 @@ class ActivityManager:
                 Activity("2x Koffie petit", 60, 6.0),
                 Activity("1x Koffie", 30, 2.2),
                 Activity("1x Koffie compleet", 30, 3.5),
-                nothing
+                self.nothing
             ],
             "Tussen door": [
                 Activity("Prosseco", 0, 3.0),
@@ -208,6 +208,8 @@ class ActivityManager:
         currentTime = datetime.datetime.strptime(startingTime, "%H:%M")
         result = "\\begin{tabular}{ll} \n"
         for activity in self.currentActivities:
+            if activity == self.nothing:
+                continue
             if activity.configureable:
                 activity.setDuration(inputs.intput("hoelang %s in minuten?\n" % activity.name))
             timestr = currentTime.strftime("%H.%M uur")
