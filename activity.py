@@ -98,6 +98,7 @@ class ActivityManager:
             ],
             eten: [
                 Activity("Koud, warm en dessert buffet De Huiskamer", 180, 37.9, childreduction=.25),
+                Activity("Hapjes buffet", 90, 18.9, childreduction=.25),
             ],
             "Ter afsluiting": [
                 Activity("Koffie", 30, 2.2),
