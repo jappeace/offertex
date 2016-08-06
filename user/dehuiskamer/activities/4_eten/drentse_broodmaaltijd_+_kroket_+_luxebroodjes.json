@@ -1,0 +1,11 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "drentse_broodmaaltijd",
+        "kroket",
+        "luxebroodjes"
+    ],
+    "duration_minutes": 90.0,
+    "name": "Drentse Broodmaaltijd + kroket + luxebroodjes",
+    "price_pp_euros": 17.9
+}

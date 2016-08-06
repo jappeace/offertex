@@ -1,0 +1,9 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "buffet_dessert"
+    ],
+    "duration_minutes": 45.0,
+    "name": "Buffet dessert",
+    "price_pp_euros": 9.9
+}

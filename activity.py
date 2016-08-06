@@ -20,8 +20,8 @@ class Activity:
     def __init__(
             self,
             name,
-            durationInMinutes,
-            pricePerPerson,
+            durationInMinutes = 0,
+            pricePerPerson = 0,
             flatPrice = 0,
             childreduction= 0,
             configureable = False
@@ -31,8 +31,11 @@ class Activity:
         self.pricePerPerson = pricePerPerson
         self.flatPrice = flatPrice
         self.childfactor = 1 - childreduction
-        self.filesysNames = [name.lower().replace(" ", "_")]
+        self.filesysNames = [self.filename()]
         self.configureable = configureable
+
+    def filename(self):
+        return self.name.lower().replace(" ", "_").replace("/", "_of_")
 
     def setDuration(self, durationInMinutes):
         self.duration = datetime.timedelta(minutes = durationInMinutes)
@@ -287,3 +290,24 @@ class ActivityManager:
                 result += actcontent
 
         return result
+
+manager = ActivityManager()
+
+import os
+os.chdir("user/dehuiskamer/activities")
+for (directory, activities) in manager.possibleActivities.items():
+
+    os.mkdir(directory)
+    os.chdir(directory)
+    for activity in activities:
+        result = {
+            "name":activity.name,
+            "price_pp_euros": activity.pricePerPerson,
+            "duration_minutes": activity.duration.seconds/60,
+            "childreduction_pp_euros": 1-activity.childfactor,
+            "detail_files": activity.filesysNames
+        }
+        with open(activity.filename()+".json", "w") as resultfile:
+            import json
+            resultfile.write(json.dumps(result, indent=4, sort_keys=True))
+    os.chdir("../")

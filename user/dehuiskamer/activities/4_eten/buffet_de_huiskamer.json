@@ -1,0 +1,12 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "buffet_de_huiskamer",
+        "buffetkoud",
+        "buffetwarm",
+        "buffet_dessert"
+    ],
+    "duration_minutes": 180.0,
+    "name": "Buffet De Huiskamer",
+    "price_pp_euros": 37.9
+}

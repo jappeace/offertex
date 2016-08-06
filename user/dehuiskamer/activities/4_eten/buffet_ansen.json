@@ -1,0 +1,12 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "buffet_ansen",
+        "buffetkoud",
+        "buffetwarm",
+        "buffet_dessert"
+    ],
+    "duration_minutes": 120.0,
+    "name": "Buffet Ansen",
+    "price_pp_euros": 29.9
+}

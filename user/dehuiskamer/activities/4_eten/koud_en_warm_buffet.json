@@ -1,0 +1,10 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "buffetkoud",
+        "buffetwarm"
+    ],
+    "duration_minutes": 120.0,
+    "name": "Koud en warm buffet",
+    "price_pp_euros": 27.9
+}

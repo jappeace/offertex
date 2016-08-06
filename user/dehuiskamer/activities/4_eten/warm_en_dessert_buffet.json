@@ -1,0 +1,10 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "buffetwarm",
+        "buffet_dessert"
+    ],
+    "duration_minutes": 120.0,
+    "name": "Warm en dessert buffet",
+    "price_pp_euros": 27.9
+}

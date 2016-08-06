@@ -1,0 +1,12 @@
+{
+    "childreduction_pp_euros": 0.25,
+    "detail_files": [
+        "brunch",
+        "drentse_broodmaaltijd",
+        "kroket",
+        "luxebroodjes"
+    ],
+    "duration_minutes": 120.0,
+    "name": "Brunch",
+    "price_pp_euros": 24.9
+}
