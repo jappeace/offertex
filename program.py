@@ -16,7 +16,7 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from android import outFileName, outPath, symbolTable, name, outFile
+from offertex import outFileName, outPath, symbolTable, name, outFile
 from subprocess import check_output, CalledProcessError, TimeoutExpired
 
 def executeAction(command):
