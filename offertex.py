@@ -18,6 +18,7 @@
 
 import re
 import os
+import inputs
 
 print("Offertex Copyright (C) 2016 Jappie Klooster")
 print("This program comes with ABSOLUTELY NO WARRANTY; for details see the")
@@ -33,12 +34,15 @@ abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
+os.chdir("user")
+choices = [directory for directory in os.listdir() if os.path.isdir(directory)]
+os.chdir(inputs.userChoice("Choose user", choices))
+
 symbolTable = {}
 newFile = []
 
 variablesFolder = "variables" # for input sanitation
 
-import inputs
 
 def selectMenu(optionsFile, var):
     with open(optionsFile, 'r') as options:
@@ -174,7 +178,7 @@ def createOutfile(name,attempts):
     if not attempts == "":
         attempts = "(%s)" % attempts
     return '%s%s.tex' % (outFileName,attempts)
-def createOutFileName(path,name,attempts):
+def createOutFileName(path, name, attempts):
     return '%s/%s' % (path,createOutfile(outFileName,attempts))
 
 while os.path.isfile(createOutFileName(outPath, outFileName,attempts)):

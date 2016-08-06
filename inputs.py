@@ -16,6 +16,11 @@
 
 
 def userChoice(msg, options):
+    if len(options) == 0:
+        raise ValueError("weird use of userChoice, expecting more than 0 options")
+    if len(options) == 1:
+        return options[0]
+
     print(msg)
     optmap = {}
     for n,line in enumerate(options):
