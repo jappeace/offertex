@@ -41,7 +41,6 @@ class Activity:
         result.directory = directory
         with open(filename,'r') as data:
             son = "".join(data.readlines())
-            print(son)
             obj = json.loads(son)
             for key in result.__dict__.keys():
                 if key in obj:
