@@ -29,25 +29,25 @@ class Activity:
         self.price_flat_euros = 0
         self.child_reduction_factor = 0
         self.custom_people_count = Activity.use_group_size
+        self.directory = "" # to figure out the details
         self.detail_files =  []
     def __str__(self):
         result = self.name
-        if self.custom_people_count != Activity.use_group_size:
-            result = "%ix %s" % (self.custom_people_count, self.name)
         return result
     def __repr__(self):
         return self.name
-    def create_from_file(filename):
+    def create_from_file(filename, directory):
         result = Activity()
+        result.directory = directory
         with open(filename,'r') as data:
             son = "".join(data.readlines())
             print(son)
             obj = json.loads(son)
             for key in result.__dict__.keys():
-                if key == "duration_minutes":
-                    result.setDuration(obj[key])
-                    continue
                 if key in obj:
+                    if key == "duration_minutes":
+                        result.setDuration(obj[key])
+                        continue
                     result.__dict__[key] = obj[key]
             if result.name == Activity.default_name:
                 result.name = filename.replace(".json", "").replace("_", " ").title()
@@ -63,20 +63,21 @@ class Activity:
 
 class ActivityManager:
 
+    folder = "activities"
     def readdefaults():
         with open("default.json", "r") as deffile:
             return "".join(deffile.readlines())
         raise ValueError("couldn't read defaults")
     def createFromFileSystem():
         result = ActivityManager()
-        os.chdir("activities")
+        os.chdir(ActivityManager.folder)
 
         reg = re.compile("\.json$")
         for directory in [d for d in os.listdir() if os.path.isdir(d)]:
             cat_key = directory.split('_',1)[-1].title().replace('_', ' ')
             os.chdir(directory)
             result.possible_activities[cat_key] = [
-                Activity.create_from_file(fi) for fi in os.listdir() if reg.search(fi) and os.path.isfile(fi)
+                Activity.create_from_file(fi, directory) for fi in os.listdir() if reg.search(fi) and os.path.isfile(fi)
             ]
             os.chdir("../")
 
@@ -111,6 +112,7 @@ class ActivityManager:
             result = Activity()
             print("Maak tijdelijk eigen veld, voor permanent gelieve een bestand aanmaken in user/username/activities")
             result.name = inputs.intput_str("Naam")
+            result.setDuration(inputs.intput("Hoe lang duurt %s in minuten?" % result.name))
             result.price_pp_euros = inputs.intput_float("Prijs per persoon, in euros")
             result.price_flat_euros = inputs.intput_float("Prijs, extra, ongeacht persoon aantal, in euros")
             if result.price_pp_euros != 0:
@@ -124,11 +126,11 @@ class ActivityManager:
             choice = inputs.userChoice("Which activity", self.current_activities)
             choice.setDuration(inputs.intput("hoelang %s in minuten?\n" % choice.name))
         special_operations = {
-            "Verwijder laatste toevoeging": lambda: self.current_activities.pop(),
-            "Klaar met planning en ga verder": disable_loop,
-            "Voeg eigen veld toe": own_field,
-            "Bewerk aantal personen van veld": edit_peoplecount,
-            "Bewerk duratie van veld": edit_duration
+            " Verwijder laatste toevoeging": lambda: self.current_activities.pop(),
+            " Klaar met planning en ga verder": disable_loop,
+            " Voeg eigen veld toe": own_field,
+            " Bewerk aantal personen van veld": edit_peoplecount,
+            " Bewerk duratie van veld": edit_duration
         }
         while run_menu_loop:
             self.printCurrentPlanning()
@@ -145,7 +147,7 @@ class ActivityManager:
 
     def selectActivity(self, category):
         items = list(self.possible_activities[category])
-        go_back = "Terug"
+        go_back = " Terug"
         items.append(go_back)
         choice = inputs.userChoice("selecteer een %s activiteit" % category, items)
         if choice != go_back:
@@ -187,7 +189,7 @@ class ActivityManager:
                 perPersonCosts = activity.price_pp_euros * adults
                 totalPrice += perPersonCosts
                 result += "%d & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
-                (adults, activity, activity.pricePerPerson, perPersonCosts)
+                (adults, activity, activity.price_pp_euros, perPersonCosts)
 
             if peopleCount != adults:
                 # doulbe rounding is a big no no, but the offer should look
@@ -196,16 +198,16 @@ class ActivityManager:
                 # The only way to do this right is by doing double roundings
                 # because we don't want people recalulating and have a difference
                 # of several euros.
-                childprice = round(activity.pricePerPerson * activity.childfactor, 1)
+                childprice = round(activity.price_pp_euros * activity.child_reduction_factor, 1)
                 childCost = round(childrenCount*childprice,1)
                 result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
                 (childrenCount, childprice, childCost)
                 totalPrice += childCost
 
-            if activity.flatPrice != 0:
+            if activity.price_flat_euros != 0:
                 result += "1 & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
-                (activity, activity.flatPrice, activity.flatPrice)
-                totalPrice += activity.flatPrice
+                (activity, activity.price_flat_euros, activity.price_flat_euros)
+                totalPrice += activity.price_flat_euros
 
         result += "\\hline\n"
         result += "& Totaal incl. btw & & & \\euro{} & %.2f \\\\\n" % totalPrice
@@ -215,15 +217,14 @@ class ActivityManager:
     def activitiesDetailsText(self):
         result = ""
         print("starting figuring out details...")
-        folder = "details"
-        import os
-        if not os.path.isdir(folder):
-            print("WARNING, %s folder not found" % folder)
+        os.chdir(ActivityManager.folder)
 
         for act in self.current_activities:
             actcontent = ""
-            for actFSName in act.filesysNames:
-                filename = "%s/%s.tex" % (folder, actFSName)
+            if act.directory != "":
+                os.chdir(act.directory)
+            for detail in act.detail_files:
+                filename = "%s.tex" % detail
                 if not os.path.isfile(filename):
                     print("geen details voor %s" % filename)
                     continue
@@ -235,5 +236,8 @@ class ActivityManager:
             if actcontent != "":
                 result += "\\subsection{%s}" % act.name
                 result += actcontent
+            if act.directory != "":
+                os.chdir("../")
 
+        os.chdir("../")
         return result

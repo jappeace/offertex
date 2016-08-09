@@ -166,7 +166,7 @@ if not os.path.exists(outPath):
     os.makedirs(outPath)
     import shutil
     imgfolder = "img"
-    shutil.copytree(imgfolder,"{}/{}".format(outPath,imgfolder))
+    shutil.copytree(imgfolder,"%s/%s" % (outPath,imgfolder))
 
 outFileName = symbolTable[name]
 outFileName = outFileName.replace(".", "")

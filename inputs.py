@@ -21,6 +21,8 @@ def userChoice(msg, options):
     if len(options) == 1:
         return options[0]
 
+    # sort based on the string representation
+    options = sorted(options, key=lambda option: str(option)) 
     print(msg)
     optmap = {}
     for n,line in enumerate(options):
