@@ -1,9 +1,0 @@
-{
-	"_comment": "The values by default, comment like this is ignored",
-	"name":"default",
-	"duration_minutes":0,
-	"price_pp_euros":0,
-	"price_flat_euros":0,
-	"childreduction_pp_euros":0,
-	"configurable":false
-}

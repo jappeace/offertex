@@ -38,9 +38,15 @@ def userChoice(msg, options):
         return userChoice(msg, options)
 
 # try again on value error
-def intput(msg):
+def intput(msg, check_function = int, error_msg = "Acepteer alleen integers"):
     while True:
         try:
-            return int(input(msg))
+            return check_function(input(msg))
         except ValueError:
-            print("Acepteer alleen integers")
+            print(error_msg)
+
+def intput_float(msg):
+    return intput(msg=msg, check_function = float, error_msg = "Acepteer alleen getallen met een punt er in")
+
+def intput_str(msg):
+    return intput(msg=msg, check_function = str, error_msg = "Acepteer alleen text")

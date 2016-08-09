@@ -10,200 +10,144 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
 # GNU General Public License for more details.
-
 # You should have received a copy of the GNU General Public License
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
 import datetime
-class Activity:
-    def __init__(
-            self,
-            name,
-            durationInMinutes = 0,
-            pricePerPerson = 0,
-            flatPrice = 0,
-            childreduction= 0,
-            configureable = False
-        ):
-        self.name = name
-        self.setDuration(durationInMinutes)
-        self.pricePerPerson = pricePerPerson
-        self.flatPrice = flatPrice
-        self.childfactor = 1 - childreduction
-        self.filesysNames = [self.filename()]
-        self.configureable = configureable
-
-    def filename(self):
-        return self.name.lower().replace(" ", "_").replace("/", "_of_")
-
-    def setDuration(self, durationInMinutes):
-        self.duration = datetime.timedelta(minutes = durationInMinutes)
-
-    def __str__(self):
-        return self.name
-
-class Decoration(Activity):
-    def __init__(self, base, extension, nameoverwrite = ""):
-        if nameoverwrite == "":
-            self.name = "%s + %s" % (base.name, extension)
-        else:
-            self.name = nameoverwrite
-
-        self.duration = base.duration + extension.duration
-        self.pricePerPerson = base.pricePerPerson + extension.pricePerPerson
-        self.flatPrice = base.flatPrice + extension.flatPrice
-        # good luck making a composition out of this...
-        # lets use a reducing default strategy instead.
-        self.childfactor = extension.childfactor
-        if base.childfactor != 1:
-            self.childfactor = base.childfactor
-        self.filesysNames = base.filesysNames + extension.filesysNames
-        self.configureable = base.configureable or extension.configureable
-
 import inputs
-class ActivityManager:
-    nothing = Activity("niks", 0, 0)
+import os
+import re
+import json
+class Activity:
+    default_name = "default"
+    use_group_size = -1
     def __init__(self):
-        self.currentActivities = []
+        self.name = Activity.default_name
+        self.duration_minutes = 0
+        self.price_pp_euros = 0
+        self.price_flat_euros = 0
+        self.childreduction_pp_euros = 0
+        self.custom_people_count = Activity.use_group_size
+        self.detail_files =  []
+    def __str__(self):
+        result = self.name
+        if self.custom_people_count != Activity.use_group_size:
+            result = "%ix %s" % (self.custom_people_count, self.name)
+        return result
+    def __repr__(self):
+        return self.name
+    def create_from_file(filename):
+        result = Activity()
+        with open(filename,'r') as data:
+            son = "".join(data.readlines())
+            print(son)
+            obj = json.loads(son)
+            for key in result.__dict__.keys():
+                if key in obj:
+                    result.__dict__[key] = obj[key]
+            if result.name == Activity.default_name:
+                result.name = filename.replace(".json", "").replace("_", " ").title()
 
-        eten = "Eten"
-        self.possibleActivities = {
-            "Beginnen met": [
-                Activity("2x Koffie gebak", 60, 6.9),
-                Activity("2x Koffie cake", 60, 5.5),
-                Activity("2x Koffie petit", 60, 6.0),
-                Activity("1x Koffie", 30, 2.2),
-                Activity("1x Koffie compleet", 30, 3.5),
-                self.nothing
-            ],
-            "Tussen door": [
-                Activity("Prosseco", 0, 3.0),
-                Activity("Hapjes koud", 0, 0.8),
-                Activity("Hapjes koud mix", 0, 1.3),
-                Activity("Hapjes warm", 0, 1.3),
-                Activity("Hapjes bittergarnituur", 0, 0.8),
-                Activity("Consumpties/Borrelen", 0, 2.3, configureable = True),
-            ],
-            "Aktiviteit": [
-                Activity("Klootschieten", 75, 2),
-                Activity("Oud hollandse spelletjes", 75, 0, 75),
-                Activity("Huifkar", 60, 0, 175),
-                Activity("Video Quize", 60, 0, 75),
-                Activity("Steps", 90, 8),
-                Activity("Fietsen", 90, 12),
-                Activity("Tandem", 90, 22),
-                Activity("Boerengolf", 90, 10),
-                Activity("Solex", 120, 30),
-                Activity("Tractor puzzel tocht", 120, 30),
-                Activity("Spel", 200, 6,150),
-                Activity("Trouw ceremonie", 60, 0,175),
-            ],
-            eten: [
-                Activity("Koud, warm en dessert buffet De Huiskamer", 180, 37.9, childreduction=.25),
-                Activity("Hapjes buffet", 90, 18.9, childreduction=.25),
-            ],
-            "Ter afsluiting": [
-                Activity("Koffie", 30, 2.2),
-                Activity("Broodje ham/kaas", 0, 2.5),
+            return result
+        raise ValueError("Could not open %s" % filename)
+    def ask_custom_people_count(self):
+        self.custom_people_count = inputs.intput(
+            "Hoeveel mensen? %i voor gebruik groepgrote" % Activity.use_group_size
+        )
+
+class ActivityManager:
+
+    def readdefaults():
+        with open("default.json", "r") as deffile:
+            return "".join(deffile.readlines())
+        raise ValueError("couldn't read defaults")
+    def createFromFileSystem():
+        result = ActivityManager()
+        os.chdir("activities")
+
+        reg = re.compile("\.json$")
+        for directory in [d for d in os.listdir() if os.path.isdir(d)]:
+            cat_key = directory.split('_',1)[-1].title().replace('_', ' ')
+            os.chdir(directory)
+            result.possible_activities[cat_key] = [
+                Activity.create_from_file(fi) for fi in os.listdir() if reg.search(fi) and os.path.isfile(fi)
             ]
-        }
-        brood = Activity("Drentse Broodmaaltijd", 90, 13.9, childreduction=.25)
-        kroket = Activity("kroket", 0, 2)
-        luxeBroodjes = Activity("luxebroodjes", 0, 2)
-        brunch_base = Decoration(brood, Decoration(kroket,luxeBroodjes))
-        brunch = Activity("Brunch", 30, 7)
-        brunch_hk = Activity("Brunch De Huiskamer", 0, 5)
-        self.possibleActivities[eten] += [
-            brood,
-            Decoration(brood, kroket),
-            Decoration(brood, luxeBroodjes),
-            brunch_base
-        ]
-        tmp = Decoration(brunch, brunch_base)
-        tmp.name = brunch.name
-        self.possibleActivities[eten] += [tmp]
+            os.chdir("../")
 
-        tmp = Decoration(brunch_hk, tmp)
-        tmp.name = brunch_hk.name
-        self.possibleActivities[eten] += [
-                tmp,
-                Activity("Hightea De Huiskamer", 120, 22.9, childreduction=.25),
-                Activity("Hightea Ansen", 90, 19.5, childreduction=.25),
-                Activity("Keuzemenu soep", 150, 32.9),
-                Activity("Keuzemenu drie gangen", 150, 37.9),
-                Activity("Keuzemenu vier gangen", 180, 42.9),
-        ]
-        koud = Activity("buffetkoud", 60, 0, childreduction=.25)
-        warm = Activity("buffetwarm", 60, 27.9, childreduction=.25)
-        dessert = Activity("Buffet dessert", 60, 0, childreduction=.25)
-        warmdessert = Decoration(warm, dessert, nameoverwrite="Warm en dessert buffet")
-        kwdbuffet = Decoration(koud, warmdessert)
-        self.possibleActivities[eten] += [
-            Decoration(koud, warm, nameoverwrite="Koud en warm buffet"),
-            warmdessert,
-            Decoration(Activity("Buffet Ansen", -60, 2), kwdbuffet, nameoverwrite="Buffet Ansen"),
-            Decoration(Activity("Buffet De Huiskamer", 0, 10), kwdbuffet, nameoverwrite="Buffet De Huiskamer")
-        ]
-        # because price inconsisitency...
-        dessert = Activity("Buffet dessert", 45, 9.9, childreduction=.25)
-        soep = Activity("Buffet soep", 30, 5.9)
-        ijs = Activity("Buffet ijs", 30, 5.9)
-        self.possibleActivities[eten] += [
-            dessert,
-            Activity("Barbeque Ansen", 120, 24.9, childreduction=.25),
-            Activity("Barbeque De Huiskamer", 180, 27.9, childreduction=.25),
-            Decoration(soep,
-                Decoration(
-                    Activity("Buffetwarm goedkoop", 60, 15.1, childreduction=.25), ijs
-                ),
-                nameoverwrite="Soep, warm en ijs buffet"
-            ),
-            ijs,
-            soep,
-            Activity("Buffet pannenkoeken", 60, 12),
-            Activity("Lunch", 60, 9.9),
-            Activity("Receptie arrangement", 240, 28.5),
-        ]
-        self._onlyStart = set(["Beginnen met"])
+        with open("config.json") as configfile:
+            config = json.loads("".join(configfile.readlines()))
+            result.only_on_start = config["only_on_start"]
+
+        os.chdir("../")
+        return result
+
+    def __init__(self):
+        self.current_activities = []
+        self.only_on_start = []
+        self.possible_activities = {}
+        self.first_execution = True 
 
     def getCategories(self):
-        keys = self.possibleActivities.keys()
-        if self.currentActivities == []:
-            return sorted(list(self._onlyStart))
-        return sorted(list(keys - self._onlyStart))
+        keys = self.possible_activities.keys()
+        if self.first_execution:
+            self.first_execution = False
+            return sorted(list(self.only_on_start))
+        return sorted(list(keys - self.only_on_start))
     def planning(self):
         print("")
         print("Start de planning")
-        delete = "Verwijder laatste toevoeging"
-        done = "Klaar met planning en ga verder"
-        while True:
+
+        run_menu_loop = True
+        def disable_loop():
+            nonlocal run_menu_loop 
+            run_menu_loop = False
+        def own_field():
+            result = Activity()
+            print("Maak tijdelijk eigen veld, voor permanent gelieve een bestand aanmaken in user/username/activities")
+            result.name = inputs.intput_str("Naam")
+            result.price_pp_euros = inputs.intput_float("Prijs per persoon, in euros")
+            result.price_flat_euros = inputs.intput_float("Prijs, extra, ongeacht persoon aantal, in euros")
+            if result.price_pp_euros != 0:
+                result.childreduction_pp_euros = 1-inputs.intput_float("Kinder korting, in procenten") / 100
+            result.ask_custom_people_count()
+            self.current_activities.append(result)
+        def edit_peoplecount():
+            choice = inputs.userChoice("Which activity", self.current_activities)
+            choice.ask_custom_people_count()
+        special_operations = {
+            "Verwijder laatste toevoeging": lambda: self.current_activities.pop(),
+            "Klaar met planning en ga verder": disable_loop,
+            "Voeg eigen veld toe": own_field,
+            "Bewerk aantal personen van veld": edit_peoplecount
+        }
+        while run_menu_loop:
             self.printCurrentPlanning()
             categories = self.getCategories()
             if len(categories) == 1:
                 self.selectActivity(next(iter(categories)))
                 continue
-            categories.append(done)
-            categories.append(delete)
+            categories.extend(special_operations.keys())
             choice = inputs.userChoice("kies optie", categories)
-            if choice == done:
-                break
-            if choice == delete:
-                self.currentActivities.pop()
+            if choice in special_operations.keys():
+                special_operations[choice]()
                 continue
             self.selectActivity(choice)
 
     def selectActivity(self, category):
-        items = self.possibleActivities[category]
+        items = list(self.possible_activities[category])
+        go_back = "Terug"
+        items.append(go_back)
         choice = inputs.userChoice("selecteer een %s activiteit" % category, items)
-        self.currentActivities.append(choice)
+        if choice != go_back:
+            self.current_activities.append(choice)
 
     def printCurrentPlanning(self):
         print("")
         print("---")
-        if len(self.currentActivities) > 0:
+        if len(self.current_activities) > 0:
             print("Huidige planning")
-        for i,activity in enumerate(self.currentActivities):
+        for i,activity in enumerate(self.current_activities):
             print("%d: %s"%(i,activity))
         print("")
 
@@ -211,9 +155,7 @@ class ActivityManager:
     def toTimeTableLatexStr(self, startingTime):
         currentTime = datetime.datetime.strptime(startingTime, "%H:%M")
         result = "\\begin{tabular}{ll} \n"
-        for activity in self.currentActivities:
-            if activity == self.nothing:
-                continue
+        for activity in self.current_activities:
             if activity.configureable:
                 activity.setDuration(inputs.intput("hoelang %s in minuten?\n" % activity.name))
             timestr = currentTime.strftime("%H.%M uur")
@@ -228,7 +170,7 @@ class ActivityManager:
         childrenCount = int(childrenCount)
         peopleCount = int(peopleCount)
 
-        for activity in self.currentActivities:
+        for activity in self.current_activities:
             adults = peopleCount
             if activity.configureable:
                 adults = adults * inputs.intput("hoeveel %s per persoon?\n" % activity.name)
@@ -273,7 +215,7 @@ class ActivityManager:
         if not os.path.isdir(folder):
             print("WARNING, %s folder not found" % folder)
 
-        for act in self.currentActivities:
+        for act in self.current_activities:
             actcontent = ""
             for actFSName in act.filesysNames:
                 filename = "%s/%s.tex" % (folder, actFSName)
@@ -290,24 +232,3 @@ class ActivityManager:
                 result += actcontent
 
         return result
-
-manager = ActivityManager()
-
-import os
-os.chdir("user/dehuiskamer/activities")
-for (directory, activities) in manager.possibleActivities.items():
-
-    os.mkdir(directory)
-    os.chdir(directory)
-    for activity in activities:
-        result = {
-            "name":activity.name,
-            "price_pp_euros": activity.pricePerPerson,
-            "duration_minutes": activity.duration.seconds/60,
-            "childreduction_pp_euros": 1-activity.childfactor,
-            "detail_files": activity.filesysNames
-        }
-        with open(activity.filename()+".json", "w") as resultfile:
-            import json
-            resultfile.write(json.dumps(result, indent=4, sort_keys=True))
-    os.chdir("../")

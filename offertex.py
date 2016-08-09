@@ -125,7 +125,7 @@ def fillVar(var):
     return simpleInput(var)
 
 import activity
-manager = activity.ActivityManager()
+manager = activity.ActivityManager.createFromFileSystem()
 
 def parseLine(line):
     match = re.findall('((?<=\$)[A-Z]+)+', line)

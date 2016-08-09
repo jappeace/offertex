@@ -1,0 +1,4 @@
+{
+	"_comment": "Configuration of the activity manager object",
+	"only_on_start": ["Beginnen Met"]
+}
