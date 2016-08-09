@@ -43,7 +43,7 @@ def userChoice(msg, options):
 def intput(msg, check_function = int, error_msg = "Acepteer alleen integers"):
     while True:
         try:
-            return check_function(input(msg))
+            return check_function(input(msg+":\n"))
         except ValueError:
             print(error_msg)
 

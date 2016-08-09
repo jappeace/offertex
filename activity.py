@@ -31,6 +31,8 @@ class Activity:
         self.custom_people_count = Activity.use_group_size
         self.directory = "" # to figure out the details
         self.detail_files =  []
+        self.custom_details = "" # temporary custom details
+
     def __str__(self):
         result = self.name
         return result
@@ -123,13 +125,17 @@ class ActivityManager:
             choice.ask_custom_people_count()
         def edit_duration():
             choice = inputs.userChoice("Which activity", self.current_activities)
-            choice.setDuration(inputs.intput("hoelang %s in minuten?\n" % choice.name))
+            choice.setDuration(inputs.intput("hoelang %s in minuten?" % choice.name))
+        def edit_custom_details():
+            choice = inputs.userChoice("Which activity", self.current_activities)
+            choice.custom_details = inputs.intput_str("Details in latex")
         special_operations = {
             " Verwijder laatste toevoeging": lambda: self.current_activities.pop(),
             " Klaar met planning en ga verder": disable_loop,
             " Voeg eigen veld toe": own_field,
             " Bewerk aantal personen van veld": edit_peoplecount,
-            " Bewerk duratie van veld": edit_duration
+            " Bewerk duratie van veld": edit_duration,
+            " Voeg details toe (extra gerechten kleine aanpassingen etc)": edit_custom_details
         }
         while run_menu_loop:
             self.printCurrentPlanning()
@@ -219,7 +225,7 @@ class ActivityManager:
         os.chdir(ActivityManager.folder)
 
         for act in self.current_activities:
-            actcontent = ""
+            actcontent = act.custom_details
             if act.directory != "":
                 os.chdir(act.directory)
             for detail in act.detail_files:
