@@ -1,5 +1,5 @@
 {
-    "childreduction_pp_euros": 0.25,
+    "child_reduction_factor": 0.25,
     "detail_files": [
         "koud,_warm_en_dessert_buffet_de_huiskamer"
     ],

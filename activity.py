@@ -27,7 +27,7 @@ class Activity:
         self.duration_minutes = 0
         self.price_pp_euros = 0
         self.price_flat_euros = 0
-        self.childreduction_pp_euros = 0
+        self.child_reduction_factor = 0
         self.custom_people_count = Activity.use_group_size
         self.detail_files =  []
     def __str__(self):
@@ -44,6 +44,9 @@ class Activity:
             print(son)
             obj = json.loads(son)
             for key in result.__dict__.keys():
+                if key == "duration_minutes":
+                    result.setDuration(obj[key])
+                    continue
                 if key in obj:
                     result.__dict__[key] = obj[key]
             if result.name == Activity.default_name:
@@ -55,6 +58,8 @@ class Activity:
         self.custom_people_count = inputs.intput(
             "Hoeveel mensen? %i voor gebruik groepgrote" % Activity.use_group_size
         )
+    def setDuration(self, durationInMinutes):
+        self.duration_minutes = datetime.timedelta(minutes = durationInMinutes)
 
 class ActivityManager:
 
@@ -109,17 +114,21 @@ class ActivityManager:
             result.price_pp_euros = inputs.intput_float("Prijs per persoon, in euros")
             result.price_flat_euros = inputs.intput_float("Prijs, extra, ongeacht persoon aantal, in euros")
             if result.price_pp_euros != 0:
-                result.childreduction_pp_euros = 1-inputs.intput_float("Kinder korting, in procenten") / 100
+                result.child_reduction_factor = 1-inputs.intput_float("Kinder korting, in procenten") / 100
             result.ask_custom_people_count()
             self.current_activities.append(result)
         def edit_peoplecount():
             choice = inputs.userChoice("Which activity", self.current_activities)
             choice.ask_custom_people_count()
+        def edit_duration():
+            choice = inputs.userChoice("Which activity", self.current_activities)
+            choice.setDuration(inputs.intput("hoelang %s in minuten?\n" % choice.name))
         special_operations = {
             "Verwijder laatste toevoeging": lambda: self.current_activities.pop(),
             "Klaar met planning en ga verder": disable_loop,
             "Voeg eigen veld toe": own_field,
-            "Bewerk aantal personen van veld": edit_peoplecount
+            "Bewerk aantal personen van veld": edit_peoplecount,
+            "Bewerk duratie van veld": edit_duration
         }
         while run_menu_loop:
             self.printCurrentPlanning()
@@ -156,11 +165,9 @@ class ActivityManager:
         currentTime = datetime.datetime.strptime(startingTime, "%H:%M")
         result = "\\begin{tabular}{ll} \n"
         for activity in self.current_activities:
-            if activity.configureable:
-                activity.setDuration(inputs.intput("hoelang %s in minuten?\n" % activity.name))
             timestr = currentTime.strftime("%H.%M uur")
             result += "%s & %s \\\\\n" % (timestr, activity)
-            currentTime += activity.duration
+            currentTime += activity.duration_minutes
         result += "%s & %s \\\\\n" % (currentTime.strftime("%H.%M uur"), "Einde")
         result += "\n \\end{tabular} \n"
         return result
@@ -171,20 +178,18 @@ class ActivityManager:
         peopleCount = int(peopleCount)
 
         for activity in self.current_activities:
-            adults = peopleCount
-            if activity.configureable:
-                adults = adults * inputs.intput("hoeveel %s per persoon?\n" % activity.name)
+            adults = peopleCount if activity.custom_people_count == Activity.use_group_size else activity.custom_people_count
 
-            if childrenCount != 0 and activity.childfactor != 1:
+            if childrenCount != 0 and activity.child_reduction_factor != 1:
                 adults -= childrenCount
 
-            if activity.pricePerPerson != 0:
-                perPersonCosts = activity.pricePerPerson * adults
+            if activity.price_pp_euros != 0:
+                perPersonCosts = activity.price_pp_euros * adults
                 totalPrice += perPersonCosts
                 result += "%d & %s & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
                 (adults, activity, activity.pricePerPerson, perPersonCosts)
 
-            if peopleCount != adults and not activity.configureable:
+            if peopleCount != adults:
                 # doulbe rounding is a big no no, but the offer should look
                 # nice, and having individual cents on it just makes it look
                 # greedy.

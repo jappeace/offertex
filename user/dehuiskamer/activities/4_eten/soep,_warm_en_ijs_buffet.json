@@ -1,5 +1,5 @@
 {
-    "childreduction_pp_euros": 0.25,
+    "child_reduction_factor": 0.25,
     "detail_files": [
         "buffet_soep",
         "buffetwarm_goedkoop",
