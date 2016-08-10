@@ -22,6 +22,7 @@ import json
 class Activity:
     default_name = "default"
     use_group_size = -1
+    no_custom_details = ""
     def __init__(self):
         self.name = Activity.default_name
         self.setDuration(0)
@@ -31,7 +32,7 @@ class Activity:
         self.custom_people_count = Activity.use_group_size
         self.directory = "" # to figure out the details
         self.detail_files =  []
-        self.custom_details = "" # temporary custom details
+        self.custom_details = Activity.no_custom_details # temporary custom details
 
     def __str__(self):
         result = self.name
@@ -101,7 +102,7 @@ class ActivityManager:
             self.first_execution = False
             return sorted(list(self.only_on_start))
         return sorted(list(keys - self.only_on_start))
-    def planning(self):
+    def planning(self, start_time):
         print("")
         print("Start de planning")
 
@@ -138,7 +139,7 @@ class ActivityManager:
             " Voeg details toe (extra gerechten kleine aanpassingen etc)": edit_custom_details
         }
         while run_menu_loop:
-            self.printCurrentPlanning()
+            self.printCurrentPlanning(start_time)
             categories = self.getCategories()
             if len(categories) == 1:
                 self.selectActivity(next(iter(categories)))
@@ -158,22 +159,36 @@ class ActivityManager:
         if choice != go_back:
             self.current_activities.append(choice)
 
-    def printCurrentPlanning(self):
+    def printCurrentPlanning(self, start_time):
         print("")
         print("---")
+        def on_row(activity, time):
+            timestring = time.strftime("%H:%M ")
+            result = "%s %s" % (timestring, activity.name)
+            if activity.custom_people_count != Activity.use_group_size:
+                result += "\n       Aantal hoofden: %i" % activity.custom_people_count
+            if activity.custom_details != Activity.no_custom_details:
+                result += "\n       Extra details: %s" % activity.custom_details
+            return result + "\n"
+
         if len(self.current_activities) > 0:
-            print("Huidige planning")
-        for i,activity in enumerate(self.current_activities):
-            print("%d: %s"%(i,activity))
+            print("Huidige planning:")
+            reduction = reduce_with_time(self.current_activities, start_time, on_row)
+            print(reduction.string)
+            stub = Activity()
+            stub.name = "Einde"
+            print(on_row(stub, reduction.time))
+        else:
+            print("Geen planning")
         print("")
 
     def toTimeTableLatexStr(self, startingTime):
         result = "\\begin{tabular}{ll} \n"
         reduction = reduce_with_time(self.current_activities, startingTime,
-                                     lambda a,t: t.srftime("%H.%M & " + a + "\\\\\n")
+                                     lambda a,t: t.strftime("%H.%M & " + str(a) + "\\\\\n")
         )
         result += reduction.string
-        result += "%s & %s \\\\\n" % (reduction.time.strftime("%H.%M uur"), "Einde")
+        result += "%s & %s \\\\\n" % (reduction.time.strftime("%H.%M "), "Einde")
         result += "\n \\end{tabular} \n"
         return result
 

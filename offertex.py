@@ -133,8 +133,9 @@ def parseLine(line):
         if var not in symbolTable:
             value = ""
             if var == "STARTPLANNING":
-                manager.planning()
-                symbolTable["DRAAIBOEK"] = manager.toTimeTableLatexStr(symbolTable["BEGINTIJD"])
+                begintijd = symbolTable["BEGINTIJD"]
+                manager.planning(begintijd )
+                symbolTable["DRAAIBOEK"] = manager.toTimeTableLatexStr(begintijd )
                 symbolTable["PRIJSOVERZICHT"] = manager.toPriceTableLatexStr(symbolTable["GROEPGROTE"], symbolTable["KINDEREN"])
             elif var == "ACTIVITEITDETAILS":
                 value = manager.activitiesDetailsText()
