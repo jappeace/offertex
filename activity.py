@@ -24,7 +24,7 @@ class Activity:
     use_group_size = -1
     def __init__(self):
         self.name = Activity.default_name
-        result.setDuration(0)
+        self.setDuration(0)
         self.price_pp_euros = 0
         self.price_flat_euros = 0
         self.child_reduction_factor = 0
@@ -167,17 +167,16 @@ class ActivityManager:
             print("%d: %s"%(i,activity))
         print("")
 
-
     def toTimeTableLatexStr(self, startingTime):
-        currentTime = datetime.datetime.strptime(startingTime, "%H:%M")
         result = "\\begin{tabular}{ll} \n"
-        for activity in self.current_activities:
-            timestr = currentTime.strftime("%H.%M uur")
-            result += "%s & %s \\\\\n" % (timestr, activity)
-            currentTime += activity.duration_minutes
-        result += "%s & %s \\\\\n" % (currentTime.strftime("%H.%M uur"), "Einde")
+        reduction = reduce_with_time(self.current_activities, startingTime,
+                                     lambda a,t: t.srftime("%H.%M & " + a + "\\\\\n")
+        )
+        result += reduction.string
+        result += "%s & %s \\\\\n" % (reduction.time.strftime("%H.%M uur"), "Einde")
         result += "\n \\end{tabular} \n"
         return result
+
     def toPriceTableLatexStr(self, peopleCount, childrenCount):
         result = "\\begin{tabular}{l l l r l r} \n"
         totalPrice = 0
@@ -246,3 +245,13 @@ class ActivityManager:
 
         os.chdir("../")
         return result
+
+from collections import namedtuple
+ReductionResult = namedtuple("ReductionResult", ["string", "time"])
+def reduce_with_time(current_activities, start_time, on_row_formater):
+    currentTime = datetime.datetime.strptime(start_time, "%H:%M")
+    result = ""
+    for activity in current_activities:
+        result += on_row_formater(activity, currentTime)
+        currentTime += activity.duration_minutes
+    return ReductionResult(result, currentTime)
