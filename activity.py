@@ -24,7 +24,7 @@ class Activity:
     use_group_size = -1
     def __init__(self):
         self.name = Activity.default_name
-        self.duration_minutes = 0
+        result.setDuration(0)
         self.price_pp_euros = 0
         self.price_flat_euros = 0
         self.child_reduction_factor = 0
