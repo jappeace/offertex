@@ -44,7 +44,14 @@ class Activity:
         result.directory = directory
         with open(filename,'r') as data:
             son = "".join(data.readlines())
-            obj = json.loads(son)
+
+            try:
+                obj = json.loads(son)
+            except ValueError as e:
+                print("a json error occured with file: %s/%s" % (directory, filename))
+                print(e)
+                input()
+                raise e
             for key in result.__dict__.keys():
                 if key in obj:
                     if key == "duration_minutes":
