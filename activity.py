@@ -28,7 +28,7 @@ class Activity:
         self.setDuration(0)
         self.price_pp_euros = 0
         self.price_flat_euros = 0
-        self.child_reduction_factor = 0
+        self.child_reduction_factor = 0.0
         self.custom_people_count = Activity.use_group_size
         self.directory = "" # to figure out the details
         self.detail_files =  []
@@ -79,7 +79,9 @@ class ActivityManager:
             cat_key = directory.split('_',1)[-1].title().replace('_', ' ')
             os.chdir(directory)
             result.possible_activities[cat_key] = [
-                Activity.create_from_file(fi, directory) for fi in os.listdir() if reg.search(fi) and os.path.isfile(fi)
+                Activity.create_from_file(fi, directory)
+                for fi in os.listdir()
+                if reg.search(fi) and os.path.isfile(fi)
             ]
             os.chdir("../")
 
@@ -201,7 +203,7 @@ class ActivityManager:
         for activity in self.current_activities:
             adults = peopleCount if activity.custom_people_count == Activity.use_group_size else activity.custom_people_count
 
-            if childrenCount != 0 and activity.child_reduction_factor != 1:
+            if childrenCount != 0 and activity.child_reduction_factor != 0.0:
                 adults -= childrenCount
 
             if activity.price_pp_euros != 0:
@@ -217,7 +219,7 @@ class ActivityManager:
                 # The only way to do this right is by doing double roundings
                 # because we don't want people recalulating and have a difference
                 # of several euros.
-                childprice = round(activity.price_pp_euros * activity.child_reduction_factor, 1)
+                childprice = round(activity.price_pp_euros * (1-activity.child_reduction_factor), 1)
                 childCost = round(childrenCount*childprice,1)
                 result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
                 (childrenCount, childprice, childCost)
