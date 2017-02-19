@@ -21,7 +21,7 @@ import re
 import json
 class Activity:
     default_name = "default"
-    use_group_size = -1
+    use_default = -1
     no_custom_details = ""
     def __init__(self):
         self.name = Activity.default_name
@@ -29,7 +29,8 @@ class Activity:
         self.price_pp_euros = 0
         self.price_flat_euros = 0
         self.child_reduction_factor = 0.0
-        self.custom_people_count = Activity.use_group_size
+        self.custom_people_count = Activity.use_default
+        self.custom_children_count = Activity.use_default
         self.directory = "" # to figure out the details
         self.detail_files =  []
         self.custom_details = Activity.no_custom_details # temporary custom details
@@ -39,7 +40,10 @@ class Activity:
         return result
     def __repr__(self):
         return self.name
+
+    @staticmethod
     def create_from_file(filename, directory):
+        """Make an activity from a json file"""
         result = Activity()
         result.directory = directory
         with open(filename,'r') as data:
@@ -57,10 +61,17 @@ class Activity:
             return result
         raise ValueError("Could not open %s" % filename)
     def ask_custom_people_count(self):
+        """Promt user to modify the people count"""
         self.custom_people_count = inputs.intput(
-            "Hoeveel mensen? %i voor gebruik groepgrote" % Activity.use_group_size
+            "Hoeveel mensen? %i voor gebruik groepgrote" % Activity.use_default
+        )
+    def ask_custom_children_count(self):
+        """Promt user to modify the children count"""
+        self.custom_children_count = inputs.intput(
+            "Hoeveel mensen? %i voor gebruik groepgrote" % Activity.use_default
         )
     def setDuration(self, durationInMinutes):
+        """Make sure duration is set in the propper manner"""
         self.duration_minutes = datetime.timedelta(minutes = durationInMinutes)
 
 class ActivityManager:
@@ -126,6 +137,9 @@ class ActivityManager:
         def edit_peoplecount():
             choice = inputs.userChoice("Which activity", self.current_activities)
             choice.ask_custom_people_count()
+        def edit_childrencount():
+            choice = inputs.userChoice("Which activity", self.current_activities)
+            choice.ask_custom_children_count()
         def edit_duration():
             choice = inputs.userChoice("Which activity", self.current_activities)
             choice.setDuration(inputs.intput("hoelang %s in minuten?" % choice.name))
@@ -137,6 +151,7 @@ class ActivityManager:
             " Klaar met planning en ga verder": disable_loop,
             " Voeg eigen veld toe": own_field,
             " Bewerk aantal personen van veld": edit_peoplecount,
+            " Bewerk aantal kinderen van veld": edit_childrencount,
             " Bewerk duratie van veld": edit_duration,
             " Voeg details toe (extra gerechten kleine aanpassingen etc)": edit_custom_details
         }
@@ -167,7 +182,7 @@ class ActivityManager:
         def on_row(activity, time):
             timestring = time.strftime("%H:%M ")
             result = "%s %s" % (timestring, activity.name)
-            if activity.custom_people_count != Activity.use_group_size:
+            if activity.custom_people_count != Activity.use_default:
                 result += "\n       Aantal hoofden: %i" % activity.custom_people_count
             if activity.custom_details != Activity.no_custom_details:
                 result += "\n       Extra details: %s" % activity.custom_details
@@ -201,10 +216,11 @@ class ActivityManager:
         peopleCount = int(peopleCount)
 
         for activity in self.current_activities:
-            adults = peopleCount if activity.custom_people_count == Activity.use_group_size else activity.custom_people_count
+            adults = peopleCount if activity.custom_people_count == Activity.use_default else activity.custom_people_count
+            childs = childrenCount if activity.custom_children_count == Activity.use_default else activity.custom_children_count
 
-            if childrenCount != 0 and activity.child_reduction_factor != 0.0:
-                adults -= childrenCount
+            if childs != 0 and activity.child_reduction_factor != 0.0:
+                adults -= childs
 
             if activity.price_pp_euros != 0:
                 perPersonCosts = activity.price_pp_euros * adults
@@ -220,9 +236,9 @@ class ActivityManager:
                 # because we don't want people recalulating and have a difference
                 # of several euros.
                 childprice = round(activity.price_pp_euros * (1-activity.child_reduction_factor), 1)
-                childCost = round(childrenCount*childprice,1)
+                childCost = round(childs * childprice,1)
                 result += "%d & Kinderen & \\euro{} & %.2f & \\euro{} & %.2f \\\\\n" % \
-                (childrenCount, childprice, childCost)
+                (childs, childprice, childCost)
                 totalPrice += childCost
 
             if activity.price_flat_euros != 0:
