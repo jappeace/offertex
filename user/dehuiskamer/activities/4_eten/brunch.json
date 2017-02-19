@@ -1,5 +1,5 @@
 {
-    "child_reduction_factor": 0.25,
+    "child_reduction_factor": 0.75,
     "detail_files": [
         "brunch",
         "drentse_broodmaaltijd",
