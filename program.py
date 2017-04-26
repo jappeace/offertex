@@ -16,7 +16,7 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from offertex import outFileName, outPath, symbolTable, name, outFile
+from offertex import outPath, main
 from subprocess import check_output, CalledProcessError, TimeoutExpired
 
 def executeAction(command):
@@ -30,17 +30,19 @@ def executeAction(command):
         result = e.output
     print(result.decode("utf8"))
 
-processPdf = [
-    "pdflatex",
-    "-halt-on-error",
-    "-shell-escape",
-    outFileName
-]
-executeAction(processPdf)
-executeAction(processPdf) # twice for background?
+if __name__ == "__main__":
+    newfile = main()
+    processPdf = [
+        "pdflatex",
+        "-halt-on-error",
+        "-shell-escape",
+        newfile.name
+    ]
+    executeAction(processPdf)
+    executeAction(processPdf) # twice for background?
 
-# cleanup latex bullshit
-os.remove("%s.log"%outFile[:-4])
-os.remove("%s.aux"%outFile[:-4])
+    # cleanup latex bullshit
+    os.remove("%s.log"%newfile.path[:-4])
+    os.remove("%s.aux"%newfile.path[:-4])
 
-input("done, output can be found in %s, press enter to exit program" % outPath)
+    input("done, output can be found in %s, press enter to exit program" % outPath)

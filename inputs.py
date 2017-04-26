@@ -52,3 +52,7 @@ def intput_float(msg):
 
 def intput_str(msg):
     return intput(msg=msg, check_function = str, error_msg = "Acepteer alleen text")
+
+
+def simpleInput(var):
+    return input("specificeer %s \n" % var)
