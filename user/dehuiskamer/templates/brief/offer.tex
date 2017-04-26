@@ -1,10 +1,10 @@
 % Overizcht feest:
-% Datum \$DATUMFEEST
-% Aantal gasten \$GROEPGROTE
-% Waarvan kinderen \$KINDEREN
-% Betreft: \$BETREFT
-% Begintijd: \$BEGINTIJD
-% \$STARTPLANNING
+% Datum {{ datumfeest }}
+% Aantal gasten {{ groepgrote }}
+% Waarvan kinderen {{ kinderen }}
+% Betreft: {{ betreft }}
+% Begintijd: {{ begintijd }}
+% {{ startplanning }}
 
 \documentclass{letter}
 \usepackage[dutch]{babel}
@@ -76,36 +76,36 @@
 \ThisURCornerWallPaper{0.25}{img/logo.jpg}
 
 \signature{Pedro Klooster}
-\address{\$NAAM \\ \$ADRESS \\ \$POSTCODE \$PLAATS}
+\address{{{ naam }}\\ {{ adress }}\\ {{ postcode }} {{plaats}}}
 \begin{letter}{
 \textbf{Betreft: offerte}\\%
-  E-mail \$EMAIL  \\
-  Tel \$TEL
+  E-mail {{ email  }}\\
+  Tel {{ tel }}
 	}
 \thispagestyle{empty}
 
 
-\opening{Geachte \$AANHEF \$NAAM,}
+\opening{Geachte {{ aanhef }} {{ naam }},}
 
 Naar aanleiding van ons gesprek ontvangt u hierbij een vrijblijvend offerte voorstel
-voor uw \$BETREFT op \$DATUMFEEST \\
+voor uw {{ betreft }} op {{ datumfeest }} \\
 
-Uitgaande van \$GROEPGROTE gasten incusief \$KINDEREN kinderen kan dit er als volgt uit zien: \\\\
-\$DRAAIBOEK
+Uitgaande van {{ groepgrote }} gasten incusief {{ kinderen }} kinderen kan dit er als volgt uit zien: \\\\
+{{ draaiboek }}
 
 \newpage
 
 
 \textbf{Kosten specificatie}
-Uigaande van \$GROEPGROTE gasten inclusief \$KINDEREN kinderen.
+Uigaande van {{ groepgrote }} gasten inclusief {{ kinderen }} kinderen.
 
-\$PRIJSOVERZICHT
+{{ prijsoverzicht }}
 
 \textbf{Bijzonderheden}
 
-\$BIJZONDERHEDEN
+{{ bijzonderheden }}
 
-\$EXTRAPUNTEN
+{{ extrapunten }}
 
 We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw reactie, \\
 
@@ -119,9 +119,9 @@ We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw re
 
 \section{Activiteit details}
 
-\$ACTIVITEITDETAILS
+{{ activiteitdetails }}
 
 \section{Dieet specificaties}
 
-\$DIEET
+{{ dieet }}
 \end{document}
