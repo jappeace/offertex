@@ -50,8 +50,15 @@ generated because the sytem module of python doesn't work.
 install qpython3, and install verblatex to create the pdf.
 Once the locale bug is fixed in android everything should work.
 
-## Future work
+## TODO
 
+Things I really want to finish in order of priority:
+
+1. Template engine #14 is most important right now, this can remove all latex from python code (eventually)
+2. Configuration langauge update #17
+2. Localization #4
+
+### Idea dump
 * Move out the hard dependencies to variable folders (KINDEREN in the options menu)
 * Move the special variables (such as startplanning and activiteitdetails) into \*.py
 files with the same name and let them be called as functions (in which probably
@@ -69,6 +76,7 @@ symbol table is exported to JSON.
 code will be executed (or a funtion in those modules will be called).
 * configurable out directory.
 
+### Futere development
 I'll probably keep developing this application for as long there is demand for it
 (A local business owner asked me to do this, and since software isn't his
 focus I decided to just opensource it, maybe somebody can get some use of it besides him)
