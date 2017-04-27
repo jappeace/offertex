@@ -18,16 +18,22 @@
 
 import re
 import os
+from collections import namedtuple
+
 import inputs
 
 _variablesFolder = "variables" # for input sanitation
 
+fileNameSymbol = "NAAM"
+ParseResult = namedtuple('ParseResult', ['filename', 'content'])
+
 class UserInterface:
     """does the user interface and parsing"""
 
+    initSymbolTable = {}
     def __init__(self, manager):
         self.manager = manager
-        self.symbolTable = {}
+        self.symbolTable = UserInterface.initSymbolTable
 
     def selectMenu(self, optionsFile, var):
         with open(optionsFile, 'r') as options:
@@ -128,3 +134,13 @@ class UserInterface:
             value = self.symbolTable[var]
             line = line.replace('\\$'+var,value)
         return line
+
+    def parseFile(self, templatename):
+        newFile = []
+        with open(templatename, 'r') as templateFile:
+            for line in templateFile:
+                newFile.append(self.parseLine(line))
+        result = ParseResult(self.symbolTable[fileNameSymbol], newFile)
+
+        self.symbolTable = UserInterface.initSymbolTable
+        return result

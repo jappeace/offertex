@@ -16,14 +16,14 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 
-import re
 import os
-import inputs
+import shutil
+from collections import namedtuple
 
+import inputs
 import activity
 import parse
 
-from collections import namedtuple
 
 outPath = "out"
 templatesFolder = "templates"
@@ -35,7 +35,10 @@ def askUserTemplate():
     """Ask the user which template to use"""
     if not os.path.isdir(templatesFolder):
         raise OSError("%s folder not found"% templatesFolder)
-    onlyfolders = [d for d in os.listdir(templatesFolder) if os.path.isdir(os.path.join(templatesFolder, d))]
+    onlyfolders = [
+        d for d in os.listdir(templatesFolder)
+        if os.path.isdir(os.path.join(templatesFolder, d))
+    ]
     selected = inputs.userChoice("Selecteer een template", onlyfolders)
     return os.path.join(templatesFolder, selected, templatefile)
 
@@ -57,32 +60,27 @@ def readTemplateAndWriteResult():
         activity.ActivityManager.createFromFileSystem()
     )
 
-    newFile = []
-    with open(askUserTemplate(), 'r') as templateFile:
-        for line in templateFile:
-            newFile.append(parser.parseLine(line))
+    parsedFile = parser.parseFile(askUserTemplate())
 
-    name = "NAAM"
-    if parser.symbolTable[name] == "":
+    if parsedFile.filename == "":
         print("Waarschuwing geen bestands naam!")
     if not os.path.exists(outPath):
         os.makedirs(outPath)
-        import shutil
         imgfolder = "img"
-        shutil.copytree(imgfolder,"%s/%s" % (outPath,imgfolder))
+        shutil.copytree(imgfolder, "%s/%s" % (outPath, imgfolder))
 
     writer = NameWriter()
-    sanatized = NameWriter.sanatize(parser.symbolTable[name])
+    sanatized = NameWriter.sanatize(parsedFile.filename)
 
     out = writer.findValidOutName(outPath, sanatized)
 
     with open(out.path, 'w') as outputFile:
         print("starting with writing")
-        for line in newFile:
+        for line in parsedFile.content:
             print(line, end="")
             outputFile.write(line)
 
-    return out 
+    return out
 
 class NameWriter:
     """Finds a free file name (with roman numerals)"""
