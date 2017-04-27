@@ -74,15 +74,15 @@ def readTemplateAndWriteResult():
     writer = NameWriter()
     sanatized = NameWriter.sanatize(parser.symbolTable[name])
 
-    newfile = writer.findValidOutName(outPath, sanatized)
+    out = writer.findValidOutName(outPath, sanatized)
 
-    with open(newfile.path, 'w') as outputFile:
+    with open(out.path, 'w') as outputFile:
         print("starting with writing")
         for line in newFile:
             print(line, end="")
             outputFile.write(line)
 
-    return newfile
+    return out 
 
 class NameWriter:
     """Finds a free file name (with roman numerals)"""
