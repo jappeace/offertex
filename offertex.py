@@ -55,11 +55,9 @@ def readTemplateAndWriteResult():
     choices = [directory for directory in os.listdir() if os.path.isdir(directory)]
     os.chdir(inputs.userChoice("Choose user", choices))
 
-
     parser = parse.UserInterface(
         activity.ActivityManager.createFromFileSystem()
     )
-
     parsedFile = parser.parseFile(askUserTemplate())
 
     if parsedFile.filename == "":
