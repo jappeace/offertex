@@ -26,16 +26,21 @@ import parse
 from collections import namedtuple
 
 outPath = "out"
+templatesFolder = "templates"
+templatefile = 'offer.tex'
+
 NewFile = namedtuple('NewFile', ['name', 'path'])
 
-def main():
-    print("Offertex Copyright (C) 2016 Jappie Klooster")
-    print("This program comes with ABSOLUTELY NO WARRANTY; for details see the")
-    print("LICENSE file. This is free software, and you are welcome to ")
-    print("redistribute it under certain conditions; see the LICENSE file for details")
-    print("")
-    print("")
+def askUserTemplate():
+    """Ask the user which template to use"""
+    if not os.path.isdir(templatesFolder):
+        raise OSError("%s folder not found"% templatesFolder)
+    onlyfolders = [d for d in os.listdir(templatesFolder) if os.path.isdir(os.path.join(templatesFolder, d))]
+    selected = inputs.userChoice("Selecteer een template", onlyfolders)
+    return os.path.join(templatesFolder, selected, templatefile)
 
+def readTemplateAndWriteResult():
+    """Read the template file and write the template result in out dir"""
     # move to the current directory so we can find the offer.tex file
     # (required for qpython as it starts in root, also just makes
     # the script more robust).
@@ -47,16 +52,13 @@ def main():
     choices = [directory for directory in os.listdir() if os.path.isdir(directory)]
     os.chdir(inputs.userChoice("Choose user", choices))
 
-    newFile = []
-    manager = activity.ActivityManager.createFromFileSystem()
-    parser = parse.UserInterface(manager)
 
-    templatesFolder = "templates"
-    if not os.path.isdir(templatesFolder):
-        raise OSError("%s folder not found"% templatesFolder)
-    onlyfolders = [d for d in os.listdir(templatesFolder) if os.path.isdir(os.path.join(templatesFolder, d))]
-    selected = inputs.userChoice("Selecteer een template", onlyfolders)
-    with open(os.path.join(templatesFolder, selected, 'offer.tex'), 'r') as templateFile:
+    parser = parse.UserInterface(
+        activity.ActivityManager.createFromFileSystem()
+    )
+
+    newFile = []
+    with open(askUserTemplate(), 'r') as templateFile:
         for line in templateFile:
             newFile.append(parser.parseLine(line))
 
@@ -69,29 +71,51 @@ def main():
         imgfolder = "img"
         shutil.copytree(imgfolder,"%s/%s" % (outPath,imgfolder))
 
-    outFileName = parser.symbolTable[name]
-    outFileName = outFileName.replace(".", "")
-    outFileName = outFileName.replace("/", "")
-    outFileName = outFileName.replace(" ", "")
-    attempts = ""
+    writer = NameWriter()
+    sanatized = NameWriter.sanatize(parser.symbolTable[name])
 
-    def createOutfile(name,attempts):
-        if not attempts == "":
-            attempts = "(%s)" % attempts
-        return '%s%s.tex' % (outFileName,attempts)
-    def createOutFileName(path, name, attempts):
-        return '%s/%s' % (path,createOutfile(outFileName,attempts))
+    newfile = writer.findValidOutName(outPath, sanatized)
 
-    while os.path.isfile(createOutFileName(outPath, outFileName,attempts)):
-        attempts += "I"
-
-    outFile = createOutFileName(outPath, outFileName,attempts)
-    outFileName = createOutfile(outFileName, attempts) # adminastration
-
-    with open(outFile, 'w') as outputFile:
+    with open(newfile.path, 'w') as outputFile:
         print("starting with writing")
         for line in newFile:
             print(line, end="")
             outputFile.write(line)
 
-    return NewFile(outFileName, outFile)
+    return newfile
+
+class NameWriter:
+    """Finds a free file name (with roman numerals)"""
+    _initialAttempts = ""
+    def __init__(self):
+        self.attempts = NameWriter._initialAttempts
+
+    @staticmethod
+    def sanatize(name, withWhat = "", toReplace = [".", "/", " "]):
+        """removes crazy stuff from filenames"""
+        for replace in toReplace:
+            name = name.replace(replace, withWhat)
+        return name
+
+    def _createOutName(self, name):
+        """Creates the final file name with the numerals"""
+        # copy so we don't overwrite
+        attempts = self.attempts
+        if attempts != NameWriter._initialAttempts:
+            attempts = "(%s)" % self.attempts.replace("IIIII", "V").replace("VV", "X")
+        return '%s%s.tex' % (name, attempts)
+
+    def _createOutPath(self, path, name):
+        """Creates the filename as a path"""
+        return '%s/%s' % (path, self._createOutName(name))
+
+    def findValidOutName(self, path, name):
+        """Keeps increasing attempts until it found a valid name"""
+        while os.path.isfile(self._createOutPath(path, name)):
+            self.attempts += "I"
+        result = NewFile(
+            self._createOutName(name),
+            self._createOutPath(path, name)
+        )
+        self.attempts = NameWriter._initialAttempts
+        return result

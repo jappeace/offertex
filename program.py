@@ -16,22 +16,32 @@
 # along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from offertex import outPath, main
-from subprocess import check_output, CalledProcessError, TimeoutExpired
+from subprocess import CalledProcessError, TimeoutExpired, check_output
+
+from offertex import outPath, readTemplateAndWriteResult
 
 def executeAction(command):
+    """execute command and print results"""
     print("executing %s" % ' '.join(command))
-    result = "" 
+    result = ""
     try:
         result = check_output(command, timeout=5, cwd=outPath)
-    except CalledProcessError as e: 
+    except CalledProcessError as e:
         result = e.output
-    except TimeoutExpired as e: 
+    except TimeoutExpired as e:
         result = e.output
     print(result.decode("utf8"))
 
-if __name__ == "__main__":
-    newfile = main()
+def main():
+    """The program logic, parse template and creates a pdf with pdflatex"""
+    print("Offertex Copyright (C) 2016 Jappie Klooster")
+    print("This program comes with ABSOLUTELY NO WARRANTY; for details see the")
+    print("LICENSE file. This is free software, and you are welcome to ")
+    print("redistribute it under certain conditions; see the LICENSE file for details")
+    print("")
+    print("")
+
+    newfile = readTemplateAndWriteResult()
     processPdf = [
         "pdflatex",
         "-halt-on-error",
@@ -46,3 +56,6 @@ if __name__ == "__main__":
     os.remove("%s.aux"%newfile.path[:-4])
 
     input("done, output can be found in %s, press enter to exit program" % outPath)
+
+if __name__ == "__main__":
+    main()
