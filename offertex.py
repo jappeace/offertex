@@ -40,7 +40,7 @@ def askUserTemplate():
         if os.path.isdir(os.path.join(templatesFolder, d))
     ]
     selected = inputs.userChoice("Selecteer een template", onlyfolders)
-    return os.path.join(templatesFolder, selected, templatefile)
+    return NewFile(templatefile, os.path.join(templatesFolder, selected))
 
 def readTemplateAndWriteResult():
     """Read the template file and write the template result in out dir"""

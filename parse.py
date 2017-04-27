@@ -135,9 +135,10 @@ class UserInterface:
             line = line.replace('\\$'+var,value)
         return line
 
-    def parseFile(self, templatename):
+    def parseFile(self, templateinfo):
         newFile = []
-        with open(templatename, 'r') as templateFile:
+        filename = os.path.join(templateinfo.path, templateinfo.name)
+        with open(filename, 'r') as templateFile:
             for line in templateFile:
                 newFile.append(self.parseLine(line))
         result = ParseResult(self.symbolTable[fileNameSymbol], newFile)
