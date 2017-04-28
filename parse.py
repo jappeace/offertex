@@ -20,6 +20,9 @@ import re
 import os
 from collections import namedtuple
 
+import jinja2 as jin
+import jinmeta as meta
+
 import inputs
 
 _variablesFolder = "variables" # for input sanitation
@@ -135,13 +138,39 @@ class UserInterface:
             line = line.replace('\\$'+var,value)
         return line
 
-    def parseFile(self, templateinfo):
-        newFile = []
-        filename = os.path.join(templateinfo.path, templateinfo.name)
-        with open(filename, 'r') as templateFile:
-            for line in templateFile:
-                newFile.append(self.parseLine(line))
-        result = ParseResult(self.symbolTable[fileNameSymbol], newFile)
+    LATEX_SUBS = [
+        (re.compile(r'\\'), r'\\textbackslash'),
+        (re.compile(r'([{}_#%&$])'), r'\\\1'),
+        (re.compile(r'~'), r'\~{}'),
+        (re.compile(r'\^'), r'\^{}'),
+        (re.compile(r'"'), r"''"),
+        (re.compile(r'\.\.\.+'), r'\\ldots'),
+    ]
 
-        self.symbolTable = UserInterface.initSymbolTable
-        return result
+    @staticmethod
+    def escape_tex(value):
+        newval = value
+        for pattern, replacement in UserInterface.LATEX_SUBS:
+            newval = pattern.sub(replacement, newval)
+        return newval
+    @staticmethod
+    def createEnvironment(path):
+        texenv = jin.Environment(
+            loader=jin.FileSystemLoader(path),
+            enable_async=False
+        )
+        texenv.block_start_string = '<='
+        texenv.block_end_string = '=>'
+        texenv.variable_start_string = '<?'
+        texenv.variable_end_string = '?>'
+        texenv.comment_start_string = '<!--'
+        texenv.comment_end_string = '-->'
+        texenv.filters['escape_tex'] = UserInterface.escape_tex
+        return texenv
+    def parseFile(self, templateinfo):
+        environment = UserInterface.createEnvironment(templateinfo.path)
+        template_source = environment.loader.get_source(environment,   templateinfo.name)[0]
+        parsed_content = environment.parse(template_source)
+        print(meta.find_undeclared_variables_in_order(parsed_content))
+        
+        return []
