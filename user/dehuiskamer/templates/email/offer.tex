@@ -1,10 +1,10 @@
 % Overizcht feest:
-% Datum {{ datumfeest }}
-% Aantal gasten {{ groepgrote }}
-% Waarvan kinderen {{ kinderen }}
-% Betreft: {{ betreft }}
-% Begintijd: {{ begintijd }}
-% {{ startplanning }}
+% Datum <? datumfeest ?>
+% Aantal gasten <? groepgrote ?>
+% Waarvan kinderen <? kinderen ?>
+% Betreft: <? betreft ?>
+% Begintijd: <? begintijd ?>
+% <? startplanning ?>
 
 \documentclass{scrartcl}
 \usepackage[dutch]{babel}
@@ -69,36 +69,36 @@
 \thispagestyle{empty}
 
 \begin{flushright}
-	{{ naam }} \\
-	{{ adress }} \\
-	{{ postcode }} {{ plaats }}
+	<? naam ?> \\
+	<? adress ?> \\
+	<? postcode ?> <? plaats ?>
 \end{flushright}
 \section{Betreft: offerte}
 \begin{tabular}{l r}
-  E-mail & {{ email }}  \\
-  Tel & {{ tel }}  \\
+  E-mail & <? email ?>  \\
+  Tel & <? tel ?>  \\
 \end{tabular}
 
-\subsubsection*{Geachte {{ aanhef }} {{ naam }},}
+\subsubsection*{Geachte <? aanhef ?> <? naam ?>,}
 
 Naar aanleiding van ons gesprek ontvangt u hierbij een vrijblijvend offerte voorstel
-voor uw {{ betreft }} op {{ datumfeest }} \\
+voor uw <? betreft ?> op <? datumfeest ?> \\
 
-Uitgaande van {{ groepgrote }} gasten incusief {{ kinderen }} kinderen kan dit er als volgt uit zien: \\\\
-{{ draaiboek }}
+Uitgaande van <? groepgrote ?> gasten incusief <? kinderen ?> kinderen kan dit er als volgt uit zien: \\\\
+<? draaiboek ?>
 
 \newpage
 
 \subsection*{Kosten specificatie}
-Uigaande van {{ groepgrote }} gasten inclusief {{ kinderen }} kinderen.
+Uigaande van <? groepgrote ?> gasten inclusief <? kinderen ?> kinderen.
 
-{{ prijsoverzicht }}
+<? prijsoverzicht ?>
 
 \subsection*{Bijzonderheden}
 
-{{ bijzonderheden }}
+<? bijzonderheden ?>
 
-{{ extrapunten }}
+<? extrapunten ?>
 
 We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw reactie, \\
 
@@ -110,10 +110,10 @@ Pedro Klooster
 
 \section{Activiteit details}
 
-{{ activiteitdetails }}
+<? activiteitdetails ?>
 
 \section{Dieet}
 
-{{ dieet }}
+<? dieet ?>
 
 \end{document}

@@ -1,10 +1,20 @@
 % Overizcht feest:
-% Datum {{ datumfeest }}
-% Aantal gasten {{ groepgrote }}
-% Waarvan kinderen {{ kinderen }}
-% Betreft: {{ betreft }}
-% Begintijd: {{ begintijd }}
-% {{ startplanning }}
+% Datum <? datumfeest ?>
+% Aantal gasten <? groepgrote ?>
+% Waarvan kinderen <? kinderen ?>
+% Betreft: <? betreft ?>
+% Begintijd: <? begintijd ?>
+% <? startplanning ?>
+
+<=
+for i in range(0,200):
+=>
+% we can repeat ourselves <? i ?> times
+<=
+endfor
+=>
+
+<!-- comment die uit tex word gefiltered -->
 
 \documentclass{letter}
 \usepackage[dutch]{babel}
@@ -43,7 +53,7 @@
                                      {\normalfont\bfseries}}
 \makeatother 
 
-\graphicspath{{img/}}
+\graphicspath{img/}
 
 \backgroundsetup{
   scale=1.2,
@@ -76,36 +86,36 @@
 \ThisURCornerWallPaper{0.25}{img/logo.jpg}
 
 \signature{Pedro Klooster}
-\address{{{ naam }}\\ {{ adress }}\\ {{ postcode }} {{plaats}}}
+\address{<? naam ?>\\ <? adress ?>\\ <? postcode ?> <? plaats ?>}
 \begin{letter}{
 \textbf{Betreft: offerte}\\%
-  E-mail {{ email  }}\\
-  Tel {{ tel }}
+  E-mail <? email  ?>\\
+  Tel <? tel ?>
 	}
 \thispagestyle{empty}
 
 
-\opening{Geachte {{ aanhef }} {{ naam }},}
+\opening{Geachte <? aanhef ?> <? naam ?>,}
 
 Naar aanleiding van ons gesprek ontvangt u hierbij een vrijblijvend offerte voorstel
-voor uw {{ betreft }} op {{ datumfeest }} \\
+voor uw <? betreft ?> op <? datumfeest ?> \\
 
-Uitgaande van {{ groepgrote }} gasten incusief {{ kinderen }} kinderen kan dit er als volgt uit zien: \\\\
-{{ draaiboek }}
+Uitgaande van <? groepgrote ?> gasten incusief <? kinderen ?> kinderen kan dit er als volgt uit zien: \\\\
+<? draaiboek ?>
 
 \newpage
 
 
 \textbf{Kosten specificatie}
-Uigaande van {{ groepgrote }} gasten inclusief {{ kinderen }} kinderen.
+Uigaande van <? groepgrote ?> gasten inclusief <? kinderen ?> kinderen.
 
-{{ prijsoverzicht }}
+<? prijsoverzicht ?>
 
 \textbf{Bijzonderheden}
 
-{{ bijzonderheden }}
+<? bijzonderheden ?>
 
-{{ extrapunten }}
+<? extrapunten ?>
 
 We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw reactie, \\
 
@@ -119,9 +129,9 @@ We hopen uw wensen op de juiste wijze te hebben vertaald, in afwachting op uw re
 
 \section{Activiteit details}
 
-{{ activiteitdetails }}
+<? activiteitdetails ?>
 
 \section{Dieet specificaties}
 
-{{ dieet }}
+<? dieet ?>
 \end{document}
