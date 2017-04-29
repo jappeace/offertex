@@ -27,7 +27,7 @@ import inputs
 
 _variablesFolder = "variables" # for input sanitation
 
-fileNameSymbol = "NAAM"
+fileNameSymbol = "naam"
 ParseResult = namedtuple('ParseResult', ['filename', 'content'])
 
 class UserInterface:
@@ -46,7 +46,7 @@ class UserInterface:
 
     def optionsMenu(self, optionsFile, var):
         def selectIfHasChildren(item):
-            hasChildren = self.symbolTable["KINDEREN"] != "0"
+            hasChildren = self.symbolTable["kinderen"] != "0"
             if item[0] == "k" and hasChildren:
                 return item[:0]+"+"+item[1:]
             else:
@@ -102,6 +102,20 @@ class UserInterface:
 
 
     def fillVar(self, var):
+        if var in self.symbolTable:
+            return self.symbolTable[var]
+
+        #TODO this shoulnd't be done here, move to varfolder somehow
+        if var == "startplanning":
+            begintijd = self.symbolTable["begintijd"]
+            self.manager.planning(begintijd )
+            self.symbolTable["draaiboek"] = self.manager.toTimeTableLatexStr(begintijd)
+            self.symbolTable["prijsoverzicht"] = self.manager.toPriceTableLatexStr(self.symbolTable["groepgrote"], self.symbolTable["kinderen"])
+            return ""
+        #TODO this shoulnd't be done here, move to varfolder somehow
+        if var == "activiteitdetails":
+            return self.manager.activitiesDetailsText()
+
         possibleFile = "{}/{}".format(_variablesFolder,var.lower())
         testFile = "%s.select" % possibleFile
         if os.path.isfile(testFile):
@@ -118,24 +132,9 @@ class UserInterface:
     def parseLine(self, line):
         match = re.findall('((?<=\$)[A-Z]+)+', line)
         for var in match:
-            if var not in self.symbolTable:
-                value = ""
-                if var == "STARTPLANNING":
-                    begintijd = self.symbolTable["BEGINTIJD"]
-                    self.manager.planning(begintijd )
-                    self.symbolTable["DRAAIBOEK"] = self.manager.toTimeTableLatexStr(begintijd )
-                    self.symbolTable["PRIJSOVERZICHT"] = self.manager.toPriceTableLatexStr(self.symbolTable["GROEPGROTE"], self.symbolTable["KINDEREN"])
-                elif var == "ACTIVITEITDETAILS":
-                    value = self.manager.activitiesDetailsText()
-
-                else:
-                    value = self.fillVar(var)
-                    if value == "":
-                        #prevents certain kinds of latex compilation bugs
-                        value = "-"
-                self.symbolTable[var] = value
-            value = self.symbolTable[var]
-            line = line.replace('\\$'+var,value)
+            value = self.fillVar(var)
+            self.symbolTable[var] = "-" if value == "" else value
+            line = line.replace('\\$'+var, self.symbolTable[var])
         return line
 
     LATEX_SUBS = [
@@ -167,10 +166,22 @@ class UserInterface:
         texenv.comment_end_string = '-->'
         texenv.filters['escape_tex'] = UserInterface.escape_tex
         return texenv
+
     def parseFile(self, templateinfo):
         environment = UserInterface.createEnvironment(templateinfo.path)
         template_source = environment.loader.get_source(environment,   templateinfo.name)[0]
         parsed_content = environment.parse(template_source)
-        print(meta.find_undeclared_variables_in_order(parsed_content))
+        undecleared = meta.filter_out_built_ins(
+            meta.find_undeclared_variables_in_order(parsed_content)
+        )
+            
+
+        for var in undecleared:
+            self.symbolTable[var] = self.fillVar(var)
         
-        return []
+        template = environment.get_template(templateinfo.name)
+        result = template.render(self.symbolTable)
+        return ParseResult(
+            self.symbolTable[fileNameSymbol],
+            result
+        )

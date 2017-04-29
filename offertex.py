@@ -74,9 +74,7 @@ def readTemplateAndWriteResult():
 
     with open(out.path, 'w') as outputFile:
         print("starting with writing")
-        for line in parsedFile.content:
-            print(line, end="")
-            outputFile.write(line)
+        outputFile.write(parsedFile.content)
 
     return out
 
