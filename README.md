@@ -54,8 +54,10 @@ Once the locale bug is fixed in android everything should work.
 
 Things I really want to finish in order of priority:
 
-1. Template engine #14 is most important right now, this can remove all latex from python code (eventually)
-2. Configuration langauge update #17
+1. Issue #18 and #19 use jinjia more and remove hardcoded dependencies,
+   these prevent other people from using this easily.
+2. Configuration langauge update #17.
+   JSON is too strict which is annoying to the current user.
 2. Localization #4
 
 ### Idea dump
