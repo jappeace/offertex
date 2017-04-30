@@ -22,7 +22,7 @@ from collections import namedtuple
 
 import inputs
 import activity
-import parse
+import userinterface
 
 
 outPath = "out"
@@ -55,7 +55,7 @@ def readTemplateAndWriteResult():
     choices = [directory for directory in os.listdir() if os.path.isdir(directory)]
     os.chdir(inputs.userChoice("Choose user", choices))
 
-    parser = parse.UserInterface(
+    parser = userinterface.UserInterface(
         activity.ActivityManager.createFromFileSystem()
     )
     parsedFile = parser.parseFile(askUserTemplate())

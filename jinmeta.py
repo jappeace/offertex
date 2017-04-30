@@ -22,7 +22,6 @@ def find_undeclared_variables_in_order(ast):
     result = []
     seen = set()
 
-    print(undeclaredSet)
     # remove duplicates
     for node in orderedNodes:
         name = node.name
@@ -43,7 +42,6 @@ def get_builtin_names():
 def filter_out_built_ins(collection):
     """Filters every built in function name from the collection"""
     builtin = get_builtin_names()
-    print(builtin)
     return [
         item
         for item in collection
