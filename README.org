@@ -51,7 +51,7 @@ install python 3 trough the classical google method. Install miktex.
 Now you can just click `program.py`
 
 **** Jinja
-To install jinja you ened to 
+To install jinja you need to open cmd and then:
 
 #+BEGIN_SRC cmd
 py -m pip -u jinja2
