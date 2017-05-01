@@ -36,7 +36,7 @@ install texlive with all required packages. Make sure you use python 3.
 on gentoo:
 
 #+BEGIN_SRC sh
-  emerge -a app-text/texlive
+  emerge -a app-text/texlive dev-python/jinja
   eselect python list
   eselect python set (any python 3)
 #+END_SRC
@@ -50,8 +50,17 @@ execute trough:
 install python 3 trough the classical google method. Install miktex.
 Now you can just click `program.py`
 
+**** Jinja
+To install jinja you ened to 
+
+#+BEGIN_SRC cmd
+py -m pip -u jinja2
+#+END_SRC cmd
+
+
 *** OSX
 Install python and mactex.
+Install jinja with pip.
 then execute trough:
 
 #+BEGIN_SRC sh
