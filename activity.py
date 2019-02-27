@@ -63,7 +63,7 @@ class Activity:
                         continue
                     result.__dict__[key] = obj[key]
             if result.name == Activity.default_name:
-                result.name = filename.replace(".json", "").replace("_", " ").title()
+                result.name = filename.replace(".json", "").replace("_", " ")
 
             return result
         raise ValueError("Could not open %s" % filename)

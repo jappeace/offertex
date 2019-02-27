@@ -1,10 +1,10 @@
 {
-    "child_reduction_factor": 0.25,
+    "child_reduction_factor": 0.30,
     "detail_files": [
         "buffetkoud",
         "buffetwarm"
     ],
     "duration_minutes": 120.0,
     "name": "Koud en warm buffet",
-    "price_pp_euros": 28.9
+    "price_pp_euros": 30.00
 }

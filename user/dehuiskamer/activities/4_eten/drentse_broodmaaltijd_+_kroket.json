@@ -1,10 +1,10 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.239520958,
     "detail_files": [
         "drentse_broodmaaltijd",
         "kroket"
     ],
     "duration_minutes": 90.0,
     "name": "Drentse Broodmaaltijd + kroket",
-    "price_pp_euros": 15.9
+    "price_pp_euros": 18.00
 }

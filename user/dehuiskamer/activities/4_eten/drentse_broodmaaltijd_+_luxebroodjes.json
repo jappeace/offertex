@@ -1,10 +1,10 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.20,
     "detail_files": [
         "drentse_broodmaaltijd",
         "luxebroodjes"
     ],
     "duration_minutes": 90.0,
     "name": "Drentse Broodmaaltijd + luxebroodjes",
-    "price_pp_euros": 16.40
+    "price_pp_euros": 18.50
 }

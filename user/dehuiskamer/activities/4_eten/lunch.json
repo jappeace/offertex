@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0,
+    "child_reduction_factor": 0.25,
     "detail_files": [
         "lunch"
     ],
     "duration_minutes": 60.0,
     "name": "Lunch",
-    "price_pp_euros": 9.9
+    "price_pp_euros": 11.00
 }

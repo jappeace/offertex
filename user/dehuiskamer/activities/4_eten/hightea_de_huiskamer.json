@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0,
+    "child_reduction_factor": 0.25,
     "detail_files": [
         "hightea_de_huiskamer"
     ],
     "duration_minutes": 120.0,
     "name": "Hightea De Huiskamer",
-    "price_pp_euros": 23.9
+    "price_pp_euros": 26.00
 }

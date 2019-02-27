@@ -1,5 +1,5 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.374531835,
     "detail_files": [
         "brunch",
         "drentse_broodmaaltijd",
@@ -8,5 +8,5 @@
     ],
     "duration_minutes": 120.0,
     "name": "Brunch",
-    "price_pp_euros": 24.9
+    "price_pp_euros": 26.70
 }

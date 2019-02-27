@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.20,
     "detail_files": [
         "Hartige_high_tea"
     ],
     "duration_minutes": 120.0,
     "name": "Hartige_high_tea",
-    "price_pp_euros": 27.5
+    "price_pp_euros": 28.00
 }

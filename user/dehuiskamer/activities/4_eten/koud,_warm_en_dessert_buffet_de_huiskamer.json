@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0.25,
+    "child_reduction_factor": 0.50,
     "detail_files": [
         "koud,_warm_en_dessert_buffet_de_huiskamer"
     ],
     "duration_minutes": 180.0,
     "name": "Koud, warm en dessert buffet De Huiskamer",
-    "price_pp_euros": 37.9
+    "price_pp_euros": 38.00
 }

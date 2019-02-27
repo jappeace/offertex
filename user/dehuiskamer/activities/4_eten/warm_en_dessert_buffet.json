@@ -1,10 +1,10 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.50,
     "detail_files": [
         "buffetwarm",
         "buffet_dessert"
     ],
     "duration_minutes": 120.0,
     "name": "Warm en dessert buffet",
-    "price_pp_euros": 28.9
+    "price_pp_euros": 30.00
 }
