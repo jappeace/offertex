@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0,
+    "child_reduction_factor": 0.25,
     "detail_files": [
         "buffet_pannenkoeken"
     ],
     "duration_minutes": 60.0,
     "name": "Buffet pannenkoeken",
-    "price_pp_euros": 12
+    "price_pp_euros": 12.50
 }

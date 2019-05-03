@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0,
+    "child_reduction_factor": 0.15,
     "detail_files": [
         "buffet_ijs"
     ],
     "duration_minutes": 30.0,
     "name": "Buffet ijs",
-    "price_pp_euros": 6.9
+    "price_pp_euros": 7.00
 }

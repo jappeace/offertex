@@ -47,8 +47,14 @@ execute trough:
 #+END_SRC
 
 *** Windows
-install python 3 trough the classical google method. Install miktex.
+install python 3 trough the classical google method.
+https://www.python.org/downloads/windows/
+Install miktex.
+https://miktex.org/howto/install-miktex
 Now you can just click `program.py`
+
+Make sure to install it as adminatrator so it can add pytohon to the
+path.
 
 **** Jinja
 To install jinja you need to open cmd and then:

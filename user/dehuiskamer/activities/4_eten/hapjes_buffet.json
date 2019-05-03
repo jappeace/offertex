@@ -1,9 +1,9 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.20,
     "detail_files": [
         "hapjes_buffet"
     ],
     "duration_minutes": 90.0,
     "name": "Hapjes buffet",
-    "price_pp_euros": 18.9
+    "price_pp_euros": 20.00
 }

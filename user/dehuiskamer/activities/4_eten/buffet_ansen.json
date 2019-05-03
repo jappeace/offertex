@@ -1,12 +1,9 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.40,
     "detail_files": [
-        "buffet_ansen",
-        "buffetkoud",
-        "buffetwarm",
-        "buffet_dessert"
+        "buffet_ansen"
     ],
     "duration_minutes": 120.0,
     "name": "Buffet Ansen",
-    "price_pp_euros": 29.9
+    "price_pp_euros": 32.00
 }

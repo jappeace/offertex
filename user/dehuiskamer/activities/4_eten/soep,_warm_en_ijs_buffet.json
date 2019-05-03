@@ -1,5 +1,5 @@
 {
-    "child_reduction_factor": 0.75,
+    "child_reduction_factor": 0.40,
     "detail_files": [
         "buffet_soep",
         "buffetwarm_goedkoop",
@@ -7,5 +7,5 @@
     ],
     "duration_minutes": 120.0,
     "name": "Soep, warm en ijs buffet",
-    "price_pp_euros": 26.9
+    "price_pp_euros": 27.00
 }
