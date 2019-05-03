@@ -1,4 +1,8 @@
-#+TITLE: Offertex
+#+TITLE: Offertex 2h
+
+Rewrite to haskell.
+I need this for myself now but I do not wish to maintain python code.
+I'm really tired of python's magical module system.
 
 This program parses latex jinja templates and querries the user how to fill
 in undeclared variables.
