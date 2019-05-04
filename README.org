@@ -4,6 +4,9 @@ Rewrite to haskell.
 I need this for myself now but I do not wish to maintain python code.
 I'm really tired of python's magical module system.
 
+Although I'm making progress I'll abandon this for now.
+This is taking too long.
+
 This program parses latex jinja templates and querries the user how to fill
 in undeclared variables.
 A user can predifined settings in the variables folder what questions will be

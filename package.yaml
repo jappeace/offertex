@@ -50,6 +50,7 @@ dependencies:
 - text
 - mtl
 - lens
+- containers
 
 library:
   source-dirs: src

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3e7d29d483cdd8bd934fbb8c934970be6042d1cb21d300c24b561faa0b427858
+-- hash: 847f5c9140ad7925686399d63c53d1e78b76dd21b8ff8289a20e869b0fe5f47a
 
 name:           offertex
 version:        2.0.0
@@ -28,6 +28,7 @@ library
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , containers
     , ginger
     , lens
     , mtl
@@ -44,6 +45,7 @@ executable exe
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , ginger
     , lens
     , mtl

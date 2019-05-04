@@ -1,15 +1,19 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Offertex.Lib
   ( libF
   ) where
 
 import           Control.Lens
 import           Control.Monad.IO.Class
+import           Control.Monad.Reader
+import           Control.Monad.State.Lazy
 import           Control.Monad.Writer.Lazy
+import qualified Data.Map.Strict           as Map
 import qualified Data.Text                 as Text
 import           Text.Ginger.GVal
 import           Text.Ginger.Parse
 import           Text.Ginger.Run
-import           Text.Ginger.Run.Type
 
 parseOpts :: MonadIO m => ParserOptions m
 parseOpts = ParserOptions
@@ -28,10 +32,15 @@ parseOpts = ParserOptions
           }
         }
 
-context :: (Show p, MonadIO m, MonadWriter Text.Text m) => GingerContext p m Text.Text
+data EnvBag = EnvBag {
+  _symbolTable :: Map.Map Text.Text Text.Text
+  } deriving Show
+makeLenses 'EnvBag
+
+context :: (Show p, MonadIO m, MonadWriter Text.Text m, MonadState EnvBag m) => GingerContext p m Text.Text
 context = makeContextTextExM lookupVar tell warnAct
 
-lookupVar :: (MonadIO m) => Text.Text -> Run p m Text.Text (GVal (Run p m Text.Text))
+lookupVar :: (MonadIO m, MonadState EnvBag m) => Text.Text -> Run p m Text.Text (GVal (Run p m Text.Text))
 lookupVar varname = do
   liftIO $ print $ "get " <> varname
   pure $ toGVal $ "result " <> varname
@@ -46,5 +55,5 @@ libF = do
   case parsed of
     Left err -> liftIO $ print err
     Right template -> do
-      res <- runWriterT $ runGingerT context template
+      res <- runWriterT $ runStateT (runGingerT context template) (EnvBag Map.empty)
       liftIO $ print res
