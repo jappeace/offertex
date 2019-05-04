@@ -1,5 +1,5 @@
-name:                template
-version:             1.0.0
+name:                offertex
+version:             2.0.0
 license:             MIT
 author:              "Jappie Klooster"
 maintainer:          "jappieklooster@hotmail.com"
@@ -46,6 +46,10 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
+- ginger
+- text
+- mtl
+- lens
 
 library:
   source-dirs: src
@@ -55,7 +59,7 @@ executables:
     main:                exe.hs
     source-dirs:         app
     dependencies:
-    - template
+    - offertex
     ghc-options:
     - -threaded
     - -rtsopts

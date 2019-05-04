@@ -1,6 +1,6 @@
 module Main where
 
-import           Lib
+import           Offertex.Lib
 
 main :: IO ()
 main = libF

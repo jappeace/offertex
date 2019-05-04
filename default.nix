@@ -1,13 +1,13 @@
-{ mkDerivation, base, hpack, stdenv }:
+{ mkDerivation, base, ginger, hpack, lens, mtl, stdenv, text }:
 mkDerivation {
-  pname = "template";
-  version = "1.0.0";
+  pname = "offertex";
+  version = "2.0.0";
   src = ./.;
   isLibrary = true;
   isExecutable = true;
-  libraryHaskellDepends = [ base ];
+  libraryHaskellDepends = [ base ginger lens mtl text ];
   libraryToolDepends = [ hpack ];
-  executableHaskellDepends = [ base ];
+  executableHaskellDepends = [ base ginger lens mtl text ];
   preConfigure = "hpack";
   license = stdenv.lib.licenses.mit;
 }

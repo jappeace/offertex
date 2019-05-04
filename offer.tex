@@ -1,0 +1,152 @@
+\documentclass{scrartcl}
+\usepackage[dutch]{babel}
+\usepackage{fancyhdr}
+\usepackage{wallpaper}
+\usepackage[official]{eurosym}
+\usepackage{background}
+\usepackage{url}
+\usepackage{enumitem}
+
+\usepackage{layouts}
+\usepackage[textheight=680pt,textwidth=500pt]{geometry}
+
+
+\usepackage{xparse} % code word
+\usepackage{contour} % for code word, adds line around text
+
+\definecolor{darkpenguinyellow}{RGB}{182,125,9}
+\definecolor{penguinyellow}{RGB}{245,192,33}
+
+\NewDocumentCommand{\codeword}{v}{%
+\texttt{\contour{penguinyellow}{\textcolor{black}{#1}}}%
+}
+
+\setlist{nosep, after=\vspace{\baselineskip}}
+
+% weird character support (ie sate).
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % load a font with all the characters
+
+
+\usepackage[object=vectorian]{pgfornament}
+
+\setcounter{secnumdepth}{0}% % Turns off numbering for sections
+\makeatletter
+\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+\patchcmd{\@sect}% <cmd>
+  {\else \protect}% <search>
+  {\protect\numberline{}\else\protect}% <replace>
+  {}{}% <success><failure>
+\makeatother 
+
+\graphicspath{{../}}
+
+\backgroundsetup{
+  scale=1.2,
+  opacity=1,
+  angle=0,
+  position=current page.south,
+  vshift=90pt,
+  hshift=15pt,
+  contents={%
+  \begin{minipage}{.8\textwidth}
+	\center
+	\large Penguin Programmeurs \\
+	\tiny Phone +316 44237437 - KvK 72671629 -  jappieklooster@hotmail.com \\
+	IBAN DE92 1001 1001 2623 0927 22 - Tax: 208405598B03 \\
+	\url{http://penguin.engineer/} - \url{https://jappieklooster.nl/} 
+  \end{minipage}\hspace{-.15\textwidth}%
+  \begin{minipage}{.18\textwidth}
+  \includegraphics[width=\linewidth,height=110pt,keepaspectratio]{branding/logo}
+  \end{minipage}%
+  }
+}
+
+\pagestyle{fancy}
+\cfoot{}
+\renewcommand\headrulewidth{0pt}
+\chead{\large Penguin Programmeurs \\
+\small \url{http://penguin.engineer/}}
+\begin{document}
+
+% big fat lambda watermark
+\ThisCenterWallPaper{0.45}{branding/lambda-white}
+
+\title{Penguin Programmeurs}
+\date{Ansen, << datum >>}
+\maketitle
+\thispagestyle{empty}
+
+
+\begin{flushright}
+	<< client.name >> \\
+	<< client.address >> \\
+        << client.postalcode >> \\
+        << client.email >>
+\end{flushright}
+\section{Betreft: Factuur router}
+\begin{tabular}{l r}
+  Datum & << datum >> \\
+  Factuur nr. & << factuur >>
+\end{tabular}
+% pgf ornements
+\begin{tikzpicture}[remember picture, overlay]
+\usetikzlibrary{calc} % dunno
+
+% collor
+\tikzset{pgfornamentstyle/.style={
+fill=gray,
+fill opacity=.2,
+color=gray,
+line width=0.25pt}}
+%
+% corners
+\node[shift={(2cm,-2.5cm)},anchor=north west](CNW) at (current page.north west){%
+  \pgfornament[width=3cm]{37}
+};
+\node[shift={(-2cm,-2.5cm)},anchor=north east](CNE) at (current page.north east){%
+  \pgfornament[width=3cm,symmetry=v]{37}
+};
+
+\node[shift={(0.5cm,1.5cm)},anchor=south west](CSW) at (current page.south west){%
+  %\pgfornament[width=4cm,symmetry=h]{63}
+};
+\node[shift={(-0.5cm,1.5cm)},anchor=south east](CSE) at (current page.south east){%
+  %\pgfornament[width=4cm,symmetry=c]{63}
+};
+
+\pgfornamenthline{CNW}{CNE}{north}{84}
+\pgfornamenthline{CSW}{CSE}{south}{83}
+% bottom
+\end{tikzpicture}
+
+\subsubsection*{Geachte heer klooster}
+Bij deze de factuur voor de geleverde diensten te zien in 
+figuur \ref{kosten}.
+
+<? set subtotaal = prijs-per-uur * uren ?>
+<? set btw = subtotaal / (1-0.21)?>
+<? set totaal = btw + subtotaal ?>
+
+\begin{figure}[h]
+  \centering
+\begin{tabular}{l | l}
+  Activiteit & Uren \\
+  \hline
+  << taak >> & << uren >> \\
+  \hline
+  Per uur & \euro << prijsPerUur >> \\
+  Sub totaal & \euro << subtotaal  >> \\ % 5000/(1-0.21)
+  Btw (21\%) & \euro << btw >> \\
+  Totaal & \euro << totaal >>
+\end{tabular}
+\caption{geleverde diensten}
+\label{kosten}
+\end{figure}
+
+<< exitBlurb >>
+Gelieve binnen 8 dagen het totaal bedrag van \euro \codeword{<< totaal >>} over maken naar 
+\codeword{IBAN DE92 1001 1001 2623 0927 22} ter attentie van factuur nummer \codeword{<< factuur >>}.
+
+\end{document}

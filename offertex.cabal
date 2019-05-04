@@ -2,43 +2,51 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fd2c111eabe5e21f40a712f6e46d2be7171bef81625110f57508d5bd73a1eb4a
+-- hash: 3e7d29d483cdd8bd934fbb8c934970be6042d1cb21d300c24b561faa0b427858
 
-cabal-version:  >= 1.10
-name:           template
-version:        1.0.0
+name:           offertex
+version:        2.0.0
 author:         Jappie Klooster
 maintainer:     jappieklooster@hotmail.com
 copyright:      2019 Jappie Klooster
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
+cabal-version:  >= 1.10
 extra-source-files:
     LICENSE
     Readme.md
 
 library
   exposed-modules:
-      Lib
+      Offertex.Lib
   other-modules:
-      Paths_template
+      Paths_offertex
   hs-source-dirs:
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , ginger
+    , lens
+    , mtl
+    , text
   default-language: Haskell2010
 
 executable exe
   main-is: exe.hs
   other-modules:
-      Paths_template
+      Paths_offertex
   hs-source-dirs:
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , template
+    , ginger
+    , lens
+    , mtl
+    , offertex
+    , text
   default-language: Haskell2010
